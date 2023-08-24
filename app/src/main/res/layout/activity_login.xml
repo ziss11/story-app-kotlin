@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightWhite"
+    android:paddingHorizontal="24dp"
+    tools:context=".presentation.ui.MainActivity">
+
+    <TextView
+        android:id="@+id/login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/login_title"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/login_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_title"
+        android:layout_marginBottom="75dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/login_subtitle"
+        android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:textSize="14sp" />
+
+    <com.ziss.storyapp.presentation.components.MyEditText
+        android:id="@+id/ed_login_email"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_below="@id/login_subtitle"
+        android:layout_marginBottom="47dp"
+        android:background="@drawable/bg_edit_text"
+        android:drawableStart="@drawable/ic_email_20"
+        android:drawablePadding="36dp"
+        android:fontFamily="@font/poppins"
+        android:hint="@string/email"
+        android:paddingHorizontal="16dp" />
+
+    <com.ziss.storyapp.presentation.components.PasswordEditText
+        android:id="@+id/ed_login_password"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_below="@id/ed_login_email"
+        android:background="@drawable/bg_edit_text"
+        android:drawableStart="@drawable/ic_lock_20"
+        android:drawablePadding="36dp"
+        android:fontFamily="@font/poppins"
+        android:hint="@string/password"
+        android:paddingHorizontal="16dp" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ed_login_password"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/button_shape"
+        android:fontFamily="@font/poppins"
+        android:text="@string/login" />
+
+    <TextView
+        android:id="@+id/tv_not_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/not_registered"
+        android:textAlignment="center"
+        android:textSize="14sp" />
+
+</RelativeLayout>

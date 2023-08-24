@@ -1,18 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingHorizontal="24dp"
     tools:context=".presentation.ui.MainActivity">
 
     <TextView
+        android:id="@+id/login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="60dp"
+        android:text="@string/login_title"
+        android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Headline6"
+        android:textStyle="bold" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/login_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_title"
+        android:layout_marginBottom="150dp"
+        android:text="@string/login_subtitle"
+        android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2" />
+
+    <com.ziss.storyapp.presentation.components.MyEditText
+        android:id="@+id/ed_login_email"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_below="@id/login_subtitle"
+        android:layout_marginBottom="47dp"
+        android:paddingStart="40dp"
+        android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:textColorHint="@color/grey"
+        android:hint="@string/email"
+        android:textStyle="bold"
+        tools:ignore="RtlSymmetry" />
+
+    <com.ziss.storyapp.presentation.components.MyEditText
+        android:id="@+id/ed_login_password"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_below="@id/ed_login_email"
+        android:paddingStart="40dp"
+        android:textColorHint="@color/grey"
+        tools:ignore="RtlSymmetry" />
+
+</RelativeLayout>

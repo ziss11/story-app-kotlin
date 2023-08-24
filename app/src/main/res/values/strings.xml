@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Story App</string>
+    <string name="login_title">Login Account</string>
+    <string name="login_subtitle">Hello, welcome back to our account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="not_registered">Not Registered yet? Create an Account</string>
 </resources>
