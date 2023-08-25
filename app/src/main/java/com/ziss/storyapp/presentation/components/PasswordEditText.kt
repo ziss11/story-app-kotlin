@@ -9,7 +9,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.ResourcesCompat
 import com.ziss.storyapp.R
 
-open class PasswordEditText : AppCompatEditText {
+class PasswordEditText : AppCompatEditText {
     constructor(context: Context) : super(context) {
         init()
     }

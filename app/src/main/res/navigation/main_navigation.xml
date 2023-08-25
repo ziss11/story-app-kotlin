@@ -8,21 +8,28 @@
     <action
         android:id="@+id/action_to_homeFragment"
         app:destination="@id/fragment_home"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/main_navigation"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_to_loginFragment"
+        app:destination="@id/fragment_login"
         app:launchSingleTop="true"
         app:popUpTo="@id/main_navigation"
         app:popUpToInclusive="true" />
 
     <fragment
         android:id="@+id/fragment_home"
-        android:name="com.ziss.storyapp.presentation.ui.HomeFragment"
+        android:name="com.ziss.storyapp.presentation.ui.fragments.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home">
-
-    </fragment>
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/fragment_login"
-        android:name="com.ziss.storyapp.presentation.ui.LoginFragment"
+        android:name="com.ziss.storyapp.presentation.ui.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
 
@@ -33,7 +40,7 @@
 
     <fragment
         android:id="@+id/fragment_register"
-        android:name="com.ziss.storyapp.presentation.ui.RegisterFragment"
+        android:name="com.ziss.storyapp.presentation.ui.fragments.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register">
 

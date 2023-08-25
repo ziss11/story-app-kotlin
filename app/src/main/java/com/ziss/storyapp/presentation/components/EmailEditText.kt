@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.ResourcesCompat
 import com.ziss.storyapp.R
 
-open class EmailEditText : AppCompatEditText {
+class EmailEditText : AppCompatEditText {
     constructor(context: Context) : super(context) {
         init()
     }

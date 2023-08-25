@@ -1,6 +1,7 @@
 package com.ziss.storyapp.data.datasources.service
 
 import com.ziss.storyapp.data.models.BaseResponse
+import com.ziss.storyapp.data.models.LoginResponse
 import com.ziss.storyapp.data.models.StoriesResponse
 import com.ziss.storyapp.utils.Constants
 import okhttp3.MultipartBody
@@ -30,7 +31,7 @@ interface ApiService {
     fun login(
         @Field("email") email: String,
         @Field("password") password: String
-    ): Call<String>
+    ): Call<LoginResponse>
 
     @Multipart
     @POST(Constants.STORIES_PATH)

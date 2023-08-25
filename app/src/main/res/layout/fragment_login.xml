@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lightWhite"
+    android:background="@color/light_white"
     android:paddingHorizontal="24dp"
     tools:context=".MainActivity">
 
@@ -57,16 +57,27 @@
         android:paddingHorizontal="16dp"
         tools:alpha="100" />
 
-    <Button
+    <com.ziss.storyapp.presentation.components.MyButton
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_below="@id/ed_login_password"
         android:layout_marginTop="36dp"
         android:alpha="0"
-        android:background="@drawable/button_shape"
+        android:enabled="false"
         android:text="@string/login"
+        android:textColor="@color/white"
         tools:alpha="100" />
+
+    <ProgressBar
+        android:id="@+id/progress_indicator"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/ed_login_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:progressTint="@color/white"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_not_register"
