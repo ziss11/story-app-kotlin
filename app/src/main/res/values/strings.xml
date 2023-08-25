@@ -6,4 +6,6 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="not_registered">Not Registered yet? Create an Account</string>
+    <string name="email_error_message">Email not valid</string>
+    <string name="password_error_message">Password must be at least 8 characters long</string>
 </resources>

@@ -25,7 +25,7 @@
         android:text="@string/login_subtitle"
         android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2" />
 
-    <com.ziss.storyapp.presentation.components.MyEditText
+    <com.ziss.storyapp.presentation.components.EmailEditText
         android:id="@+id/ed_login_email"
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -36,15 +36,6 @@
         android:textColorHint="@color/grey"
         android:hint="@string/email"
         android:textStyle="bold"
-        tools:ignore="RtlSymmetry" />
-
-    <com.ziss.storyapp.presentation.components.MyEditText
-        android:id="@+id/ed_login_password"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_below="@id/ed_login_email"
-        android:paddingStart="40dp"
-        android:textColorHint="@color/grey"
         tools:ignore="RtlSymmetry" />
 
 </RelativeLayout>

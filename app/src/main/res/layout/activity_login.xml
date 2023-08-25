@@ -11,7 +11,7 @@
         android:id="@+id/login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="@font/poppins"
         android:text="@string/login_title"
         android:textSize="20sp"
@@ -28,18 +28,19 @@
         android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2"
         android:textSize="14sp" />
 
-    <com.ziss.storyapp.presentation.components.MyEditText
+    <com.ziss.storyapp.presentation.components.EmailEditText
         android:id="@+id/ed_login_email"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_below="@id/login_subtitle"
-        android:layout_marginBottom="47dp"
+        android:layout_marginBottom="36dp"
         android:background="@drawable/bg_edit_text"
         android:drawableStart="@drawable/ic_email_20"
         android:drawablePadding="36dp"
         android:fontFamily="@font/poppins"
         android:hint="@string/email"
         android:paddingHorizontal="16dp" />
+
 
     <com.ziss.storyapp.presentation.components.PasswordEditText
         android:id="@+id/ed_login_password"
