@@ -1,41 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:paddingHorizontal="24dp"
-    tools:context=".presentation.ui.MainActivity">
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/login_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="@string/login_title"
-        android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Headline6"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/login_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_title"
-        android:layout_marginBottom="150dp"
-        android:text="@string/login_subtitle"
-        android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2" />
-
-    <com.ziss.storyapp.presentation.components.EmailEditText
-        android:id="@+id/ed_login_email"
+    <fragment
+        android:id="@+id/container"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_below="@id/login_subtitle"
-        android:layout_marginBottom="47dp"
-        android:paddingStart="40dp"
-        android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2"
-        android:textColorHint="@color/grey"
-        android:hint="@string/email"
-        android:textStyle="bold"
-        tools:ignore="RtlSymmetry" />
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_navigation" />
 
 </RelativeLayout>

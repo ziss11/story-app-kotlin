@@ -1,8 +1,8 @@
-package com.ziss.storyapp.presentation.ui
+package com.ziss.storyapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.ziss.storyapp.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import com.ziss.storyapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

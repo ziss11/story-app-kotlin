@@ -5,16 +5,18 @@
     android:layout_height="match_parent"
     android:background="@color/lightWhite"
     android:paddingHorizontal="24dp"
-    tools:context=".presentation.ui.MainActivity">
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/register_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:alpha="0"
         android:text="@string/register_title"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:alpha="100" />
 
     <TextView
         android:id="@+id/register_subtitle"
@@ -22,8 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/register_title"
         android:layout_marginBottom="75dp"
+        android:alpha="0"
         android:text="@string/register_subtitle"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:alpha="100" />
 
     <EditText
         android:id="@+id/ed_register_name"
@@ -31,12 +35,16 @@
         android:layout_height="54dp"
         android:layout_below="@id/register_subtitle"
         android:layout_marginBottom="36dp"
+        android:alpha="0"
+        android:autofillHints="name"
         android:background="@drawable/bg_edit_text"
         android:drawableStart="@drawable/ic_person_20"
         android:drawablePadding="36dp"
         android:drawableTint="@color/grey"
         android:hint="@string/name"
-        android:paddingHorizontal="16dp" />
+        android:inputType="text"
+        android:paddingHorizontal="16dp"
+        tools:alpha="100" />
 
     <com.ziss.storyapp.presentation.components.EmailEditText
         android:id="@+id/ed_register_email"
@@ -44,12 +52,14 @@
         android:layout_height="54dp"
         android:layout_below="@id/ed_register_name"
         android:layout_marginBottom="36dp"
+        android:alpha="0"
         android:background="@drawable/bg_edit_text"
         android:drawableStart="@drawable/ic_email_20"
         android:drawablePadding="36dp"
         android:drawableTint="@color/grey"
         android:hint="@string/email"
-        android:paddingHorizontal="16dp" />
+        android:paddingHorizontal="16dp"
+        tools:alpha="100" />
 
 
     <com.ziss.storyapp.presentation.components.PasswordEditText
@@ -57,12 +67,14 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_below="@id/ed_register_email"
+        android:alpha="0"
         android:background="@drawable/bg_edit_text"
         android:drawableStart="@drawable/ic_lock_20"
         android:drawablePadding="36dp"
         android:drawableTint="@color/grey"
         android:hint="@string/password"
-        android:paddingHorizontal="16dp" />
+        android:paddingHorizontal="16dp"
+        tools:alpha="100" />
 
     <Button
         android:id="@+id/btn_register"
@@ -70,8 +82,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ed_register_password"
         android:layout_marginTop="36dp"
+        android:alpha="0"
         android:background="@drawable/button_shape"
-        android:text="@string/login" />
+        android:text="@string/sign_up"
+        tools:alpha="100" />
 
     <TextView
         android:id="@+id/tv_have_account"
@@ -80,8 +94,10 @@
         android:layout_below="@id/btn_register"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
+        android:alpha="0"
         android:text="@string/have_account"
         android:textAlignment="center"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:alpha="100" />
 
 </RelativeLayout>
