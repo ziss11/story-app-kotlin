@@ -11,13 +11,13 @@ import android.text.style.StyleSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.ziss.storyapp.R
-import com.ziss.storyapp.databinding.ActivityLoginBinding
+import com.ziss.storyapp.databinding.ActivityRegisterBinding
 
-class LoginActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var binding: ActivityLoginBinding
+class RegisterActivity : AppCompatActivity(), View.OnClickListener {
+    private lateinit var binding: ActivityRegisterBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSpanText()
@@ -25,34 +25,34 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_not_register -> RegisterActivity.start(this)
+            R.id.tv_have_account -> LoginActivity.start(this)
         }
     }
 
     private fun setSpanText() {
-        val text = getString(R.string.not_registered)
+        val text = getString(R.string.have_account)
         val spannable = SpannableStringBuilder(text)
         spannable.apply {
             setSpan(
                 ForegroundColorSpan(getColor(R.color.orange)),
-                20,
+                25,
                 text.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             setSpan(
                 StyleSpan(Typeface.BOLD),
-                20,
+                25,
                 text.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-        binding.tvNotRegister.text = spannable
-        binding.tvNotRegister.setOnClickListener(this)
+        binding.tvHaveAccount.text = spannable
+        binding.tvHaveAccount.setOnClickListener(this)
     }
 
     companion object {
         fun start(context: Context) {
-            Intent(context, LoginActivity::class.java).apply {
+            Intent(context, RegisterActivity::class.java).apply {
                 context.startActivity(this)
             }
         }

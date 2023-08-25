@@ -8,4 +8,8 @@
     <string name="not_registered">Not Registered yet? Create an Account</string>
     <string name="email_error_message">Email not valid</string>
     <string name="password_error_message">Password must be at least 8 characters long</string>
+    <string name="register_title">Register Account</string>
+    <string name="register_subtitle">Register your account, and share your story</string>
+    <string name="name">Name</string>
+    <string name="have_account">Already have an account? Login</string>
 </resources>
