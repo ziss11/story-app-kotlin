@@ -1,4 +1,4 @@
-package com.ziss.storyapp.data.datasources.preference
+package com.ziss.storyapp.data.datasources.utils.preference
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

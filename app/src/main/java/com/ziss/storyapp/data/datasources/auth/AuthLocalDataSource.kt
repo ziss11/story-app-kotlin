@@ -1,11 +1,11 @@
-package com.ziss.storyapp.data.datasources
+package com.ziss.storyapp.data.datasources.auth
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.ziss.storyapp.Injection.provideAuthPreferences
-import com.ziss.storyapp.data.datasources.preference.AuthPreferences
+import com.ziss.storyapp.data.datasources.utils.preference.AuthPreferences
 
 interface AuthLocalDataSource {
     fun getToken(): LiveData<String>

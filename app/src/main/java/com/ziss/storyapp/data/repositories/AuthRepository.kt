@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.ziss.storyapp.Injection.provideAuthLocalDataSource
 import com.ziss.storyapp.Injection.provideAuthRemoteDataSource
-import com.ziss.storyapp.data.datasources.AuthLocalDataSource
-import com.ziss.storyapp.data.datasources.AuthRemoteDataSource
+import com.ziss.storyapp.data.datasources.auth.AuthLocalDataSource
+import com.ziss.storyapp.data.datasources.auth.AuthRemoteDataSource
 
 class AuthRepository private constructor(
     private val remoteDataSource: AuthRemoteDataSource,

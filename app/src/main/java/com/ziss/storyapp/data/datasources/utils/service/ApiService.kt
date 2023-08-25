@@ -1,4 +1,4 @@
-package com.ziss.storyapp.data.datasources.service
+package com.ziss.storyapp.data.datasources.utils.service
 
 import com.ziss.storyapp.data.models.BaseResponse
 import com.ziss.storyapp.data.models.LoginResponse
@@ -39,8 +39,8 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Part("photo") photo: MultipartBody.Part,
         @Part("description") descriptions: RequestBody,
-        @Part("lat") lat: RequestBody,
-        @Part("lon") lon: RequestBody,
+        @Part("lat") lat: RequestBody?,
+        @Part("lon") lon: RequestBody?,
     ): Call<BaseResponse>
 
     @GET(Constants.STORIES_PATH)

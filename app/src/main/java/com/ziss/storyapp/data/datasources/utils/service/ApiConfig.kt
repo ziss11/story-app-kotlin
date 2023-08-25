@@ -1,4 +1,4 @@
-package com.ziss.storyapp.data.datasources.service
+package com.ziss.storyapp.data.datasources.utils.service
 
 import com.ziss.storyapp.utils.Constants
 import okhttp3.OkHttpClient

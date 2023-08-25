@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ziss.storyapp.R
+import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.FragmentHomeBinding
+import com.ziss.storyapp.presentation.ui.adapters.StoryAdapter
 import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
 
@@ -20,6 +23,7 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private val binding get() = _binding!!
 
     private lateinit var factory: ViewModelFactory
+    private lateinit var storyAdapter: StoryAdapter
 
     private val authViewModel: AuthViewModel by viewModels { factory }
 
@@ -35,9 +39,8 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         factory = ViewModelFactory.getInstance(requireActivity().dataStore)
 
-        binding.appbarLayout.toolbar.title = requireActivity().getString(R.string.story_title)
-        binding.appbarLayout.toolbar.inflateMenu(R.menu.home_menu)
-        binding.appbarLayout.toolbar.setOnMenuItemClickListener(this)
+        setToolbar()
+        setListAdapter()
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -48,6 +51,27 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             }
 
             else -> false
+        }
+    }
+
+    private fun setToolbar() {
+        binding.appbarLayout.toolbar.title = requireActivity().getString(R.string.story_title)
+        binding.appbarLayout.toolbar.inflateMenu(R.menu.home_menu)
+        binding.appbarLayout.toolbar.setOnMenuItemClickListener(this)
+    }
+
+    private fun setListAdapter() {
+        val layout = LinearLayoutManager(requireActivity())
+
+        storyAdapter = StoryAdapter()
+        storyAdapter.setOnClickItemCallback(object : StoryAdapter.OnItemClickCallback {
+            override fun onItemClicked(story: StoryModel) {
+
+            }
+        })
+
+        binding.apply {
+
         }
     }
 

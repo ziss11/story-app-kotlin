@@ -1,10 +1,10 @@
-package com.ziss.storyapp.data.datasources
+package com.ziss.storyapp.data.datasources.auth
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.ziss.storyapp.Injection.provideApiService
-import com.ziss.storyapp.data.datasources.service.ApiService
+import com.ziss.storyapp.data.datasources.utils.service.ApiService
 import com.ziss.storyapp.data.models.BaseResponse
 import com.ziss.storyapp.data.models.LoginResponse
 import com.ziss.storyapp.utils.ResultState
