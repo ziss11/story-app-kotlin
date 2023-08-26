@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.story_title)
 
         factory = ViewModelFactory.getInstance(dataStore)
+        checkAuth()
+
         setListAdapter()
 
         binding.fabAddStory.setOnClickListener {
@@ -64,6 +66,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun checkAuth() {
+        authViewModel.getToken().observe(this) { token ->
+            if (token.isNullOrEmpty()) {
+                LoginActivity.start(this)
+                finish()
+            }
         }
     }
 
@@ -145,8 +156,6 @@ class MainActivity : AppCompatActivity() {
             setMessage(getString(R.string.logout_alert))
                 .setPositiveButton(R.string.ok) { _, _ ->
                     authViewModel.setToken("")
-                    LoginActivity.start(this@MainActivity)
-                    finish()
                 }
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
             create()

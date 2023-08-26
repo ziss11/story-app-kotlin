@@ -48,7 +48,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         factory = ViewModelFactory.getInstance(dataStore)
-        checkAuth()
 
         setSpanText()
         playAnimation()
@@ -90,14 +89,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    private fun checkAuth() {
-        authViewModel.getToken().observe(this) { token ->
-            if (!token.isNullOrEmpty()) {
-                MainActivity.start(this)
             }
         }
     }
