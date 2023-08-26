@@ -3,6 +3,7 @@ package com.ziss.storyapp.presentation.ui.activities
 import android.Manifest
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
@@ -19,6 +20,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
@@ -248,7 +250,10 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
 
         fun start(context: Context) {
             val intent = Intent(context, AddStoryActivity::class.java)
-            context.startActivity(intent)
+            context.startActivity(
+                intent, ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity)
+                    .toBundle()
+            )
         }
     }
 }
