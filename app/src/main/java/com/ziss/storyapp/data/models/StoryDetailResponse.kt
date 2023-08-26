@@ -9,6 +9,6 @@ data class StoryDetailResponse(
     @field: SerializedName("message")
     val message: String,
 
-    @field: SerializedName("listStory")
+    @field: SerializedName("story")
     val story: StoryModel
 )

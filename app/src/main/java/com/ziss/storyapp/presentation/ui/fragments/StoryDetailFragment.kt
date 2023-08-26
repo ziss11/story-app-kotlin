@@ -1,60 +1,133 @@
 package com.ziss.storyapp.presentation.ui.fragments
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.ziss.storyapp.R
+import com.ziss.storyapp.data.models.StoryModel
+import com.ziss.storyapp.dataStore
+import com.ziss.storyapp.databinding.FragmentStoryDetailBinding
+import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
+import com.ziss.storyapp.presentation.viewmodels.StoryViewModel
+import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
+import com.ziss.storyapp.utils.ResultState
+import com.ziss.storyapp.utils.loadImage
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [StoryDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class StoryDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentStoryDetailBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var factory: ViewModelFactory
+
+    private val authViewModel: AuthViewModel by viewModels { factory }
+    private val storyViewModel: StoryViewModel by viewModels { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_story_detail, container, false)
+        _binding = FragmentStoryDetailBinding.inflate(layoutInflater, container, false)
+        return _binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        factory = ViewModelFactory.getInstance(requireActivity().dataStore)
+
+        setupToolbar()
+        fetchToken()
+    }
+
+    private fun setupToolbar() {
+        val activity = getActivity() as AppCompatActivity
+        activity.setSupportActionBar(binding.appbarLayout.toolbar)
+        activity.supportActionBar?.title = getString(R.string.detail_story_title)
+        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun setDescription(text: String): SpannableStringBuilder {
+        val spannable = SpannableStringBuilder(text)
+        spannable.apply {
+            setSpan(
+                StyleSpan(Typeface.BOLD),
+                0,
+                text.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        return spannable
+    }
+
+    private fun setData(story: StoryModel) {
+        binding.apply {
+            name.text = story.name
+            description.text = setDescription("${story.name} ${story.description}")
+            storyImage.loadImage(story.photoUrl)
+        }
+    }
+
+    private fun fetchToken() {
+        authViewModel.getToken().observe(requireActivity()) {
+            fetchStory(it)
+        }
+    }
+
+    private fun fetchStory(token: String) {
+        val id = arguments?.getString(EXTRA_ID) as String
+        storyViewModel.getStoryById(token, id).observe(requireActivity()) { result ->
+            when (result) {
+                is ResultState.Loading -> {
+                    showLoading()
+                    showMessage(false)
+                }
+
+                is ResultState.Success -> {
+                    showLoading(false)
+                    showMessage(false)
+                    setData(result.data.story)
+                }
+
+                is ResultState.Failed -> {
+                    showLoading(false)
+                    showMessage()
+                }
+            }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean = true) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.storyItem.visibility = View.INVISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+            binding.storyItem.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showMessage(isShowMessage: Boolean = true) {
+        if (isShowMessage) {
+            binding.apply {
+                tvMessage.visibility = View.VISIBLE
+                storyItem.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                tvMessage.visibility = View.GONE
+                storyItem.visibility = View.VISIBLE
+            }
+        }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment StoryDetailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            StoryDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        const val EXTRA_ID = "extra_id"
     }
 }

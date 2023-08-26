@@ -8,6 +8,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.ziss.storyapp.databinding.ActivityMainBinding
 import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
@@ -27,13 +28,17 @@ class MainActivity : AppCompatActivity() {
         factory = ViewModelFactory.getInstance(dataStore)
 
         val navController = findNavController(R.id.container)
-
         authViewModel.getToken().observe(this) { token ->
             if (!token?.trim().isNullOrEmpty()) {
                 navController.navigate(R.id.action_to_homeFragment)
             } else {
-                navController.navigate(R.id.action_to_loginFragment)
+                navController.navigate(R.id.main_navigation)
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.container)
+        return NavigationUI.navigateUp(navController, null) || super.onSupportNavigateUp()
     }
 }

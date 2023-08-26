@@ -12,13 +12,6 @@
         app:popUpTo="@id/main_navigation"
         app:popUpToInclusive="true" />
 
-    <action
-        android:id="@+id/action_to_loginFragment"
-        app:destination="@id/fragment_login"
-        app:launchSingleTop="true"
-        app:popUpTo="@id/main_navigation"
-        app:popUpToInclusive="true" />
-
     <fragment
         android:id="@+id/fragment_home"
         android:name="com.ziss.storyapp.presentation.ui.fragments.HomeFragment"
