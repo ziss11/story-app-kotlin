@@ -19,21 +19,25 @@
         android:layout_width="300dp"
         android:layout_height="200dp"
         android:layout_marginTop="24dp"
+        android:alpha="0"
         android:background="@drawable/dotted_frame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/appbar_layout"
+        tools:alpha="100" />
 
     <ImageView
         android:id="@+id/iv_preview"
         android:layout_width="300dp"
         android:layout_height="200dp"
+        android:alpha="0"
         android:background="@drawable/rounded_shape"
         android:src="@drawable/ic_photo_24"
         app:layout_constraintBottom_toBottomOf="@+id/frame"
         app:layout_constraintEnd_toEndOf="@+id/frame"
         app:layout_constraintStart_toStartOf="@+id/frame"
         app:layout_constraintTop_toTopOf="@+id/frame"
+        tools:alpha="100"
         tools:ignore="ContentDescription"
         tools:srcCompat="@drawable/ic_photo_24" />
 
@@ -42,18 +46,21 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:alpha="0"
         android:backgroundTint="@color/orange"
         android:text="@string/camera"
         android:textColor="@color/white"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toStartOf="@id/btn_gallery"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame" />
+        app:layout_constraintTop_toBottomOf="@+id/frame"
+        tools:alpha="100" />
 
     <Button
         android:id="@+id/btn_gallery"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:alpha="0"
         android:backgroundTint="@color/orange"
         android:text="@string/gallery"
         android:textColor="@color/white"
@@ -61,14 +68,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.372"
         app:layout_constraintStart_toEndOf="@+id/btn_camera"
-        app:layout_constraintTop_toTopOf="@+id/btn_camera" />
+        app:layout_constraintTop_toTopOf="@+id/btn_camera"
+        tools:alpha="100" />
 
     <EditText
-        android:id="@+id/ed_description"
+        android:id="@+id/ed_add_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="16dp"
+        android:alpha="0"
         android:autofillHints="description"
         android:background="@drawable/bg_edit_text"
         android:gravity="start"
@@ -80,7 +89,8 @@
         android:scrollbarStyle="insideInset"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_camera" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_camera"
+        tools:alpha="100" />
 
     <com.ziss.storyapp.presentation.components.MyButton
         android:id="@+id/button_add"
@@ -88,11 +98,13 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="24dp"
+        android:alpha="0"
         android:text="@string/upload"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_description" />
+        app:layout_constraintTop_toBottomOf="@+id/ed_add_description"
+        tools:alpha="100" />
 
     <ProgressBar
         android:id="@+id/progress_indicator"

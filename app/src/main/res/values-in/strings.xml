@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="login_title">Masuk Akun</string>
+    <string name="login_subtitle">Halo, selamat datang kembali di aplikasi kami</string>
+    <string name="email">Email</string>
+    <string name="password">Kata Sandi</string>
+    <string name="login">Masuk</string>
+    <string name="not_registered">Belum terdaftar? Buat sebuah akun</string>
+    <string name="email_error_message">Email tidak valid</string>
+    <string name="password_error_message">Kata sandi harus memiliki setidaknya 8 karakter</string>
+    <string name="register_title">Daftar Akun</string>
+    <string name="register_subtitle">Daftarkan akun Anda, dan bagikan cerita Anda</string>
+    <string name="name">Name</string>
+    <string name="have_account">Sudah memiliki akun? Masuk</string>
+    <string name="sign_up">Daftar</string>
+    <string name="story_title">Story</string>
+    <string name="story_detail_title">Detil</string>
+    <string name="new_story_title">Story Baru</string>
+    <string name="email_pass_incorrect">Email atau kata sandi anda salah</string>
+    <string name="email_exists">Email telah digunakan</string>
+    <string name="register_success">"Registrasi berhasil. Silahkan masuk! "</string>
+    <string name="logout">Keluar</string>
+    <string name="ok">Oke</string>
+    <string name="cancel">Batal</string>
+    <string name="logout_alert">Anda yakin ingin keluar?</string>
+    <string name="story_not_found">Story tidak ditemukan</string>
+    <string name="description">Deskripsi</string>
+    <string name="upload">Unggah</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="not_getting_permissions">Tidak dapat perizinan</string>
+    <string name="camera_authority">com.ziss.storyapp.mycamera</string>
+    <string name="choose_a_picture">Pilih gambar</string>
+    <string name="language">Bahasa</string>
+</resources>

@@ -25,6 +25,7 @@ import com.ziss.storyapp.databinding.ActivityRegisterBinding
 import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
 import com.ziss.storyapp.utils.ResultState
+import java.util.Locale
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityRegisterBinding
@@ -129,13 +130,13 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         spannable.apply {
             setSpan(
                 ForegroundColorSpan(getColor(R.color.orange)),
-                25,
+                if (Locale.getDefault().language == "en") 25 else 20,
                 text.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             setSpan(
                 StyleSpan(Typeface.BOLD),
-                25,
+                if (Locale.getDefault().language == "en") 25 else 20,
                 text.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )

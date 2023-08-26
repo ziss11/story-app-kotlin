@@ -26,6 +26,7 @@ import com.ziss.storyapp.databinding.ActivityLoginBinding
 import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
 import com.ziss.storyapp.utils.ResultState
+import java.util.Locale
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityLoginBinding
@@ -129,12 +130,14 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         spannable.apply {
             setSpan(
                 ForegroundColorSpan(getColor(R.color.orange)),
-                20,
+                if (Locale.getDefault().language == "en") 20 else 17,
                 text.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             setSpan(
-                StyleSpan(Typeface.BOLD), 20, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                StyleSpan(Typeface.BOLD),
+                if (Locale.getDefault().language == "en") 20 else 17,
+                text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
         binding.tvNotRegister.text = spannable

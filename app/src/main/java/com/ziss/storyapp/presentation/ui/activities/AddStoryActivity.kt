@@ -1,6 +1,8 @@
 package com.ziss.storyapp.presentation.ui.activities
 
 import android.Manifest
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
@@ -75,8 +77,9 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         factory = ViewModelFactory.getInstance(dataStore)
 
         fetchToken()
+        playAnimation()
 
-        binding.edDescription.setOnClickListener { setUploadButtonEnable() }
+        binding.edAddDescription.setOnClickListener { setUploadButtonEnable() }
 
         binding.btnCamera.setOnClickListener(this)
         binding.btnGallery.setOnClickListener(this)
@@ -114,6 +117,29 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    private fun playAnimation() {
+        val viewObjects = listOf(
+            binding.frame,
+            binding.ivPreview,
+            binding.btnCamera,
+            binding.btnGallery,
+            binding.edAddDescription,
+            binding.buttonAdd
+        )
+
+        val objectAnimators = viewObjects.map {
+            ObjectAnimator.ofFloat(it, View.ALPHA, 1f).apply {
+                duration = 100
+                startDelay = 50
+            }
+        }
+
+        AnimatorSet().apply {
+            playSequentially(objectAnimators)
+            start()
+        }
+    }
+
     private fun setPreviewImage(file: File) {
         binding.frame.visibility = View.INVISIBLE
         binding.ivPreview.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -134,8 +160,8 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setUploadButtonEnable() {
-        val isEnabled = !binding.edDescription.text.isNullOrEmpty()
-                && token != null && imageFile != null
+        val isEnabled =
+            token != null && imageFile != null && !binding.edAddDescription.text.isNullOrEmpty()
 
         binding.buttonAdd.isEnabled = isEnabled
     }
@@ -145,26 +171,29 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun uploadStory() {
-        val description = binding.edDescription.text.toString()
-        storyViewModel.addStory(token!!, imageFile!!, description).observe(this) { result ->
-            when (result) {
-                is ResultState.Loading -> showLoading()
-                is ResultState.Success -> {
-                    showLoading(false)
+        val description = binding.edAddDescription.text.toString()
 
-                    if (!result.data.error) {
-                        MainActivity.start(this)
-                        finish()
-                    } else {
-                        Snackbar.make(binding.root, result.data.message, Snackbar.LENGTH_LONG)
-                            .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
-                            .setBackgroundTint(this.getColor(R.color.orange)).show()
+        if (token != null) {
+            storyViewModel.addStory(token!!, imageFile!!, description).observe(this) { result ->
+                when (result) {
+                    is ResultState.Loading -> showLoading()
+                    is ResultState.Success -> {
+                        showLoading(false)
+
+                        if (!result.data.error) {
+                            MainActivity.start(this)
+                            finish()
+                        } else {
+                            Snackbar.make(binding.root, result.data.message, Snackbar.LENGTH_LONG)
+                                .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
+                                .setBackgroundTint(this.getColor(R.color.orange)).show()
+                        }
                     }
-                }
 
-                is ResultState.Failed -> {
-                    showLoading(false)
-                    Log.d("Error", result.message)
+                    is ResultState.Failed -> {
+                        showLoading(false)
+                        Log.d("Error", result.message)
+                    }
                 }
             }
         }
@@ -197,8 +226,6 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         private val REQUIRE_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
-
-        const val UPLOAD_SUCCESS = "upload_success"
 
         fun start(context: Context) {
             val intent = Intent(context, AddStoryActivity::class.java)
