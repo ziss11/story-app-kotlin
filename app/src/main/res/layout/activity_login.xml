@@ -5,85 +5,67 @@
     android:layout_height="match_parent"
     android:background="@color/light_white"
     android:paddingHorizontal="24dp"
-    tools:context=".MainActivity">
+    tools:context=".presentation.ui.activities.LoginActivity">
 
     <TextView
-        android:id="@+id/register_title"
+        android:id="@+id/login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:alpha="0"
-        android:text="@string/register_title"
+        android:text="@string/login_title"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:alpha="100" />
 
     <TextView
-        android:id="@+id/register_subtitle"
+        android:id="@+id/login_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/register_title"
+        android:layout_below="@+id/login_title"
         android:layout_marginBottom="75dp"
         android:alpha="0"
-        android:text="@string/register_subtitle"
+        android:text="@string/login_subtitle"
         android:textSize="14sp"
         tools:alpha="100" />
 
-    <EditText
-        android:id="@+id/ed_register_name"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_below="@id/register_subtitle"
-        android:layout_marginBottom="36dp"
-        android:alpha="0"
-        android:autofillHints="name"
-        android:background="@drawable/bg_edit_text"
-        android:drawableStart="@drawable/ic_person_20"
-        android:drawablePadding="36dp"
-        android:drawableTint="@color/grey"
-        android:hint="@string/name"
-        android:inputType="text"
-        android:paddingHorizontal="16dp"
-        tools:alpha="100" />
-
     <com.ziss.storyapp.presentation.components.EmailEditText
-        android:id="@+id/ed_register_email"
+        android:id="@+id/ed_login_email"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:layout_below="@id/ed_register_name"
+        android:layout_below="@id/login_subtitle"
         android:layout_marginBottom="36dp"
         android:alpha="0"
         android:background="@drawable/bg_edit_text"
         android:drawableStart="@drawable/ic_email_20"
         android:drawablePadding="36dp"
-        android:drawableTint="@color/grey"
         android:hint="@string/email"
         android:paddingHorizontal="16dp"
         tools:alpha="100" />
 
+
     <com.ziss.storyapp.presentation.components.PasswordEditText
-        android:id="@+id/ed_register_password"
+        android:id="@+id/ed_login_password"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:layout_below="@id/ed_register_email"
+        android:layout_below="@id/ed_login_email"
         android:alpha="0"
         android:background="@drawable/bg_edit_text"
         android:drawableStart="@drawable/ic_lock_20"
         android:drawablePadding="36dp"
-        android:drawableTint="@color/grey"
         android:hint="@string/password"
         android:paddingHorizontal="16dp"
         tools:alpha="100" />
 
     <com.ziss.storyapp.presentation.components.MyButton
-        android:id="@+id/btn_register"
+        android:id="@+id/btn_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ed_register_password"
+        android:layout_height="50dp"
+        android:layout_below="@id/ed_login_password"
         android:layout_marginTop="36dp"
         android:alpha="0"
         android:enabled="false"
-        android:text="@string/sign_up"
+        android:text="@string/login"
         android:textColor="@color/white"
         tools:alpha="100" />
 
@@ -91,21 +73,21 @@
         android:id="@+id/progress_indicator"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_below="@id/ed_register_password"
+        android:layout_below="@id/ed_login_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
         android:progressTint="@color/white"
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/tv_have_account"
+        android:id="@+id/tv_not_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_register"
+        android:layout_below="@id/btn_login"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:alpha="0"
-        android:text="@string/have_account"
+        android:text="@string/not_registered"
         android:textAlignment="center"
         android:textSize="14sp"
         tools:alpha="100" />

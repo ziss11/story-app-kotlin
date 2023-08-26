@@ -1,56 +1,38 @@
-package com.ziss.storyapp.presentation.ui.fragments
+package com.ziss.storyapp.presentation.ui.activities
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.ziss.storyapp.R
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.dataStore
-import com.ziss.storyapp.databinding.FragmentStoryDetailBinding
+import com.ziss.storyapp.databinding.ActivityStoryDetailBinding
 import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
 import com.ziss.storyapp.presentation.viewmodels.StoryViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
 import com.ziss.storyapp.utils.ResultState
 import com.ziss.storyapp.utils.loadImage
 
-class StoryDetailFragment : Fragment() {
-    private var _binding: FragmentStoryDetailBinding? = null
-    private val binding get() = _binding!!
-
+class StoryDetailActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityStoryDetailBinding
     private lateinit var factory: ViewModelFactory
 
     private val authViewModel: AuthViewModel by viewModels { factory }
     private val storyViewModel: StoryViewModel by viewModels { factory }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentStoryDetailBinding.inflate(layoutInflater, container, false)
-        return _binding?.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityStoryDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        factory = ViewModelFactory.getInstance(dataStore)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        factory = ViewModelFactory.getInstance(requireActivity().dataStore)
-
-        setupToolbar()
         fetchToken()
-    }
-
-    private fun setupToolbar() {
-        val activity = getActivity() as AppCompatActivity
-        activity.setSupportActionBar(binding.appbarLayout.toolbar)
-        activity.supportActionBar?.title = getString(R.string.detail_story_title)
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun setDescription(text: String): SpannableStringBuilder {
@@ -75,14 +57,14 @@ class StoryDetailFragment : Fragment() {
     }
 
     private fun fetchToken() {
-        authViewModel.getToken().observe(requireActivity()) {
+        authViewModel.getToken().observe(this) {
             fetchStory(it)
         }
     }
 
     private fun fetchStory(token: String) {
-        val id = arguments?.getString(EXTRA_ID) as String
-        storyViewModel.getStoryById(token, id).observe(requireActivity()) { result ->
+        val id = intent.getStringExtra(EXTRA_ID) as String
+        storyViewModel.getStoryById(token, id).observe(this) { result ->
             when (result) {
                 is ResultState.Loading -> {
                     showLoading()
@@ -129,5 +111,11 @@ class StoryDetailFragment : Fragment() {
 
     companion object {
         const val EXTRA_ID = "extra_id"
+        fun start(context: Context, id: String) {
+            Intent(context, StoryDetailActivity::class.java).apply {
+                this.putExtra(EXTRA_ID, id)
+                context.startActivity(this)
+            }
+        }
     }
 }
