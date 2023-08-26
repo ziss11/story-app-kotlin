@@ -2,6 +2,8 @@ package com.ziss.storyapp.presentation.ui.activities
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -10,6 +12,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
@@ -44,7 +47,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_have_account -> {}
+            R.id.tv_have_account -> onBackPressed()
 
             R.id.btn_register -> {
                 hideKeyboard(v)
@@ -61,14 +64,12 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             is ResultState.Success -> {
                                 showLoading(false)
 
-                                val message =
-                                    this.getString(R.string.register_success)
-                                Snackbar.make(v, message, Snackbar.LENGTH_LONG)
-                                    .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
-                                    .setBackgroundTint(this.getColor(R.color.orange))
-                                    .show()
-//                                v.findNavController()
-//                                    .apply { navigate(R.id.action_registerFragment_to_loginFragment) }
+                                val message = this.getString(R.string.register_success)
+                                Intent().apply {
+                                    putExtra(REGISTER_SUCCESS, message)
+                                    setResult(RESULT_OK, this)
+                                }
+                                finish()
                             }
 
                             is ResultState.Failed -> {
@@ -164,6 +165,14 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         AnimatorSet().apply {
             playSequentially(objectAnimators)
             start()
+        }
+    }
+
+    companion object {
+        const val REGISTER_SUCCESS = "register_success"
+        fun start(context: Context, launcher: ActivityResultLauncher<Intent>) {
+            val intent = Intent(context, RegisterActivity::class.java)
+            launcher.launch(intent)
         }
     }
 }

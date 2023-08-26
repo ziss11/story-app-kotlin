@@ -21,10 +21,10 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.ListViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(story: StoryModel) {
             binding.apply {
-                name.text = story.name
-                storyImage.loadImage(story.photoUrl)
+                tvItemName.text = story.name
+                ivItemPhoto.loadImage(story.photoUrl)
             }
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 onItemClickCallback.onItemClicked(story)
             }
         }

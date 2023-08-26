@@ -2,6 +2,8 @@ package com.ziss.storyapp
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +16,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.databinding.ActivityMainBinding
+import com.ziss.storyapp.presentation.ui.activities.AddStoryActivity
+import com.ziss.storyapp.presentation.ui.activities.LoginActivity
 import com.ziss.storyapp.presentation.ui.activities.StoryDetailActivity
 import com.ziss.storyapp.presentation.ui.adapters.StoryAdapter
 import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
@@ -35,11 +39,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setSupportActionBar(binding.appbarLayout.toolbar)
         supportActionBar?.title = getString(R.string.story_title)
 
         factory = ViewModelFactory.getInstance(dataStore)
         setListAdapter()
+
+        binding.fabAddStory.setOnClickListener {
+            AddStoryActivity.start(this@MainActivity)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -49,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.logout_action -> {
+            R.id.action_logout -> {
                 logoutDialog()
                 true
             }
@@ -134,10 +143,23 @@ class MainActivity : AppCompatActivity() {
     private fun logoutDialog() {
         AlertDialog.Builder(this).apply {
             setMessage(getString(R.string.logout_alert))
-                .setPositiveButton(R.string.ok) { _, _ -> authViewModel.setToken("") }
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    authViewModel.setToken("")
+                    LoginActivity.start(this@MainActivity)
+                    finish()
+                }
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
             create()
             show()
+        }
+    }
+
+    companion object {
+        fun start(context: Context) {
+            Intent(context, MainActivity::class.java).apply {
+                flags = FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(this)
+            }
         }
     }
 }

@@ -15,7 +15,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/tv_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/avatar"
@@ -30,11 +30,12 @@
         tools:text="GoneX11" />
 
     <ImageView
-        android:id="@+id/story_image"
+        android:id="@+id/iv_item_photo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_below="@id/avatar"
         android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
         tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/avatars" />
 

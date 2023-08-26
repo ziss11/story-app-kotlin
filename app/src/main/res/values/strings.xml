@@ -14,7 +14,7 @@
     <string name="have_account">Already have an account? Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="story_title">Story</string>
-    <string name="detail_story_title">Detail Story</string>
+    <string name="story_detail_title">Detail</string>
     <string name="new_story_title">New Story</string>
     <string name="email_pass_incorrect">Your email or password incorrect</string>
     <string name="email_exists">Email has been used</string>
@@ -35,4 +35,8 @@
     <string name="cancel">Cancel</string>
     <string name="logout_alert">Are you sure want to logout?</string>
     <string name="story_not_found">Story not found</string>
+    <string name="description">Description</string>
+    <string name="upload">Upload</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>

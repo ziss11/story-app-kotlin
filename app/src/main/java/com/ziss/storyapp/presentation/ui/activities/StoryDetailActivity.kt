@@ -1,5 +1,8 @@
 package com.ziss.storyapp.presentation.ui.activities
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -10,6 +13,8 @@ import android.text.style.StyleSpan
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import com.ziss.storyapp.R
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityStoryDetailBinding
@@ -30,19 +35,43 @@ class StoryDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityStoryDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.appbarLayout.toolbar)
+        supportActionBar?.title = getString(R.string.story_detail_title)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         factory = ViewModelFactory.getInstance(dataStore)
 
+        playAnimation()
         fetchToken()
+    }
+
+    private fun playAnimation() {
+        val viewObjects = listOf(
+            binding.ivAvatar,
+            binding.tvItemName,
+            binding.ivItemPhoto,
+            binding.tvDetailDescription,
+        )
+
+        val objectAnimators = viewObjects.map {
+            ObjectAnimator.ofFloat(it, View.ALPHA, 1f).apply {
+                duration = 100
+                startDelay = 50
+            }
+        }
+
+        AnimatorSet().apply {
+            playSequentially(objectAnimators)
+            start()
+        }
     }
 
     private fun setDescription(text: String): SpannableStringBuilder {
         val spannable = SpannableStringBuilder(text)
         spannable.apply {
             setSpan(
-                StyleSpan(Typeface.BOLD),
-                0,
-                text.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                StyleSpan(Typeface.BOLD), 0, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
         return spannable
@@ -50,9 +79,9 @@ class StoryDetailActivity : AppCompatActivity() {
 
     private fun setData(story: StoryModel) {
         binding.apply {
-            name.text = story.name
-            description.text = setDescription("${story.name} ${story.description}")
-            storyImage.loadImage(story.photoUrl)
+            tvItemName.text = story.name
+            tvDetailDescription.text = setDescription("${story.name} ${story.description}")
+            ivItemPhoto.loadImage(story.photoUrl)
         }
     }
 
@@ -88,10 +117,10 @@ class StoryDetailActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean = true) {
         if (isLoading) {
             binding.progressBar.visibility = View.VISIBLE
-            binding.storyItem.visibility = View.INVISIBLE
+            binding.rlStory.visibility = View.INVISIBLE
         } else {
             binding.progressBar.visibility = View.GONE
-            binding.storyItem.visibility = View.VISIBLE
+            binding.rlStory.visibility = View.VISIBLE
         }
     }
 
@@ -99,12 +128,12 @@ class StoryDetailActivity : AppCompatActivity() {
         if (isShowMessage) {
             binding.apply {
                 tvMessage.visibility = View.VISIBLE
-                storyItem.visibility = View.GONE
+                rlStory.visibility = View.GONE
             }
         } else {
             binding.apply {
                 tvMessage.visibility = View.GONE
-                storyItem.visibility = View.VISIBLE
+                rlStory.visibility = View.VISIBLE
             }
         }
     }
@@ -114,7 +143,11 @@ class StoryDetailActivity : AppCompatActivity() {
         fun start(context: Context, id: String) {
             Intent(context, StoryDetailActivity::class.java).apply {
                 this.putExtra(EXTRA_ID, id)
-                context.startActivity(this)
+                context.startActivity(
+                    this,
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity)
+                        .toBundle()
+                )
             }
         }
     }

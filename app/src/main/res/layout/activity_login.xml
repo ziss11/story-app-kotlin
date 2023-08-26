@@ -76,7 +76,7 @@
         android:layout_below="@id/ed_login_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
-        android:progressTint="@color/white"
+        android:indeterminateTint="@color/orange"
         android:visibility="gone" />
 
     <TextView

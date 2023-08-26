@@ -1,85 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_white"
+    android:orientation="vertical"
     tools:context=".presentation.ui.activities.StoryDetailActivity">
 
-    <FrameLayout
+    <include
+        android:id="@+id/appbar_layout"
+        layout="@layout/toolbar" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/story_item"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="50dp">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_avatar"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/avatar"
-                android:layout_alignBottom="@id/avatar"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="16dp"
-                android:layout_toEndOf="@id/avatar"
-                android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold|normal"
-                tools:text="GoneX11" />
-
-            <ImageView
-                android:id="@+id/story_image"
+            <RelativeLayout
+                android:id="@+id/rl_story"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/avatar"
-                android:layout_marginTop="16dp"
-                android:transitionName="picture"
-                tools:ignore="ContentDescription"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_marginBottom="50dp">
+
+                <ImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:alpha="0"
+                    android:src="@drawable/ic_avatar"
+                    tools:alpha="100"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tv_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/iv_avatar"
+                    android:layout_alignBottom="@id/iv_avatar"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_toEndOf="@id/iv_avatar"
+                    android:alpha="0"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold|normal"
+                    tools:alpha="100"
+                    tools:text="GoneX11" />
+
+                <ImageView
+                    android:id="@+id/iv_item_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/iv_avatar"
+                    android:layout_marginTop="16dp"
+                    android:alpha="0"
+                    android:scaleType="fitCenter"
+                    tools:alpha="100"
+                    tools:ignore="ContentDescription"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/tv_detail_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/iv_item_photo"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:alpha="0"
+                    android:textSize="14sp"
+                    tools:alpha="100"
+                    tools:text="Description" />
+
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?attr/progressBarStyle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/orange"
+                android:visibility="gone" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/tv_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/story_image"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
-                android:textSize="14sp"
-                tools:text="Description" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/story_not_found"
+                android:visibility="visible" />
 
-        </RelativeLayout>
+        </FrameLayout>
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?attr/progressBarStyle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:indeterminateTint="@color/orange"
-            android:visibility="gone" />
+    </ScrollView>
 
-        <TextView
-            android:id="@+id/tv_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/story_not_found"
-            android:visibility="visible" />
-
-    </FrameLayout>
-
-</ScrollView>
+</LinearLayout>

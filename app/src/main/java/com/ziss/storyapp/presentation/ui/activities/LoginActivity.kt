@@ -2,6 +2,8 @@ package com.ziss.storyapp.presentation.ui.activities
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -10,12 +12,14 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.ziss.storyapp.MainActivity
 import com.ziss.storyapp.R
 import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityLoginBinding
@@ -29,11 +33,22 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private val authViewModel: AuthViewModel by viewModels { factory }
 
+    private val launcherRegister =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                val message = it.data?.getStringExtra(RegisterActivity.REGISTER_SUCCESS) as String
+                Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+                    .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
+                    .setBackgroundTint(this.getColor(R.color.orange)).show()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         factory = ViewModelFactory.getInstance(dataStore)
+        checkAuth()
 
         setSpanText()
         playAnimation()
@@ -45,7 +60,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_not_register -> {}
+            R.id.tv_not_register -> RegisterActivity.start(this, launcherRegister)
 
             R.id.btn_login -> {
                 hideKeyboard(v)
@@ -61,6 +76,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                             is ResultState.Success -> {
                                 showLoading(false)
                                 authViewModel.setToken(result.data.loginResult.token)
+                                MainActivity.start(this)
+                                finish()
                             }
 
                             is ResultState.Failed -> {
@@ -68,12 +85,19 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                                 val message = getString(R.string.email_pass_incorrect)
                                 Snackbar.make(v, message, Snackbar.LENGTH_LONG)
                                     .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
-                                    .setBackgroundTint(getColor(R.color.red))
-                                    .show()
+                                    .setBackgroundTint(getColor(R.color.red)).show()
                             }
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun checkAuth() {
+        authViewModel.getToken().observe(this) { token ->
+            if (!token.isNullOrEmpty()) {
+                MainActivity.start(this)
             }
         }
     }
@@ -101,10 +125,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setMyButtonEnable() {
-        val isEnabled = !binding.edLoginEmail.text.isNullOrEmpty()
-                && !binding.edLoginPassword.text.isNullOrEmpty()
-                && binding.edLoginEmail.error == null
-                && binding.edLoginPassword.error == null
+        val isEnabled =
+            !binding.edLoginEmail.text.isNullOrEmpty() && !binding.edLoginPassword.text.isNullOrEmpty() && binding.edLoginEmail.error == null && binding.edLoginPassword.error == null
 
         binding.btnLogin.isEnabled = isEnabled
     }
@@ -120,10 +142,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             setSpan(
-                StyleSpan(Typeface.BOLD),
-                20,
-                text.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                StyleSpan(Typeface.BOLD), 20, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
         binding.tvNotRegister.text = spannable
@@ -150,6 +169,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         AnimatorSet().apply {
             playSequentially(objectAnimators)
             start()
+        }
+    }
+
+    companion object {
+        fun start(context: Context) {
+            Intent(context, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(this)
+            }
         }
     }
 }
