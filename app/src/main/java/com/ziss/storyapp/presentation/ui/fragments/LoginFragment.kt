@@ -70,15 +70,15 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 authViewModel.login(email, password).observe(requireActivity()) { result ->
                     if (result != null) {
                         when (result) {
-                            is ResultState.Loading -> showLoading(true)
+                            is ResultState.Loading -> showLoading()
 
                             is ResultState.Success -> {
-                                showLoading()
+                                showLoading(false)
                                 authViewModel.setToken(result.data.loginResult.token)
                             }
 
                             is ResultState.Failed -> {
-                                showLoading()
+                                showLoading(false)
                                 val message =
                                     requireActivity().getString(R.string.email_pass_incorrect)
                                 Snackbar.make(v, message, Snackbar.LENGTH_LONG)
@@ -94,7 +94,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun showLoading(loading: Boolean = false) {
+    private fun showLoading(loading: Boolean = true) {
         binding.btnLogin.isClickable = !loading
 
         if (loading) {

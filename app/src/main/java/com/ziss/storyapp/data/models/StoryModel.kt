@@ -22,6 +22,6 @@ data class StoryModel(
     @field: SerializedName("lat")
     val lat: Double,
 
-    @field: SerializedName("createdAt")
+    @field: SerializedName("lon")
     val lon: Double,
 )

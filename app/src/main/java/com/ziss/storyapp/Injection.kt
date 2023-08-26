@@ -8,6 +8,7 @@ import com.ziss.storyapp.data.datasources.story.StoryRemoteDataSourceImpl
 import com.ziss.storyapp.data.datasources.utils.preference.AuthPreferences
 import com.ziss.storyapp.data.datasources.utils.service.ApiConfig
 import com.ziss.storyapp.data.repositories.AuthRepository
+import com.ziss.storyapp.data.repositories.StoryRepository
 
 object Injection {
     fun provideApiService() = ApiConfig.getApiService()
@@ -24,4 +25,7 @@ object Injection {
 
     fun provideAuthRepository(dataStore: DataStore<Preferences>) =
         AuthRepository.getInstance(dataStore)
+
+    fun provideStoryRepository() =
+        StoryRepository.getInstance()
 }

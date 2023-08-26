@@ -16,7 +16,9 @@ import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.FragmentHomeBinding
 import com.ziss.storyapp.presentation.ui.adapters.StoryAdapter
 import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
+import com.ziss.storyapp.presentation.viewmodels.StoryViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
+import com.ziss.storyapp.utils.ResultState
 
 class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private var _binding: FragmentHomeBinding? = null
@@ -26,6 +28,7 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var storyAdapter: StoryAdapter
 
     private val authViewModel: AuthViewModel by viewModels { factory }
+    private val storyViewModel: StoryViewModel by viewModels { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,7 +74,67 @@ class HomeFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         })
 
         binding.apply {
+            rvStory.adapter = storyAdapter
+            rvStory.layoutManager = layout
+        }
+        fetchToken()
+    }
 
+    private fun fetchToken() {
+        authViewModel.getToken().observe(requireActivity()) {
+            fetchStory(it)
+        }
+    }
+
+    private fun fetchStory(token: String) {
+        storyViewModel.getStories(token).observe(requireActivity()) { result ->
+            when (result) {
+                is ResultState.Loading -> {
+                    showLoading()
+                    showMessage(false)
+                }
+
+                is ResultState.Success -> {
+                    showLoading(false)
+                    val stories = result.data.stories
+
+                    if (stories.isNotEmpty()) {
+                        showMessage(false)
+                        storyAdapter.setStories(stories)
+                    } else {
+                        showMessage()
+                    }
+                }
+
+                is ResultState.Failed -> {
+                    showLoading(false)
+                    showMessage()
+                }
+            }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean = true) {
+        if (isLoading) {
+            binding.tvMessage.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.tvMessage.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
+        }
+    }
+
+    private fun showMessage(isShowMessage: Boolean = true) {
+        if (isShowMessage) {
+            binding.apply {
+                tvMessage.visibility = View.VISIBLE
+                rvStory.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                tvMessage.visibility = View.GONE
+                rvStory.visibility = View.VISIBLE
+            }
         }
     }
 

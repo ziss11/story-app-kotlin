@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.container)
 
         authViewModel.getToken().observe(this) { token ->
-            if (!token.isNullOrEmpty()) {
+            if (!token?.trim().isNullOrEmpty()) {
                 navController.navigate(R.id.action_to_homeFragment)
             } else {
                 navController.navigate(R.id.action_to_loginFragment)

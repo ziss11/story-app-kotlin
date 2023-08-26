@@ -70,10 +70,10 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                 authViewModel.register(name, email, password).observe(requireActivity()) { result ->
                     if (result != null) {
                         when (result) {
-                            is ResultState.Loading -> showLoading(true)
+                            is ResultState.Loading -> showLoading()
 
                             is ResultState.Success -> {
-                                showLoading()
+                                showLoading(false)
 
                                 val message =
                                     requireActivity().getString(R.string.register_success)
@@ -86,7 +86,7 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                             }
 
                             is ResultState.Failed -> {
-                                showLoading()
+                                showLoading(false)
 
                                 val message =
                                     requireActivity().getString(R.string.email_exists)
@@ -102,7 +102,7 @@ class RegisterFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun showLoading(loading: Boolean = false) {
+    private fun showLoading(loading: Boolean = true) {
         binding.btnRegister.isClickable = !loading
 
         if (loading) {

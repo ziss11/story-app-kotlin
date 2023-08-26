@@ -14,13 +14,9 @@ interface AuthLocalDataSource {
 
 class AuthLocalDataSourceImpl private constructor(private val pref: AuthPreferences) :
     AuthLocalDataSource {
-    override fun getToken(): LiveData<String> {
-        return pref.getToken().asLiveData()
-    }
+    override fun getToken() = pref.getToken().asLiveData()
 
-    override suspend fun saveToken(token: String) {
-        pref.saveToken(token)
-    }
+    override suspend fun saveToken(token: String) = pref.saveToken(token)
 
     companion object {
         private var instance: AuthLocalDataSource? = null

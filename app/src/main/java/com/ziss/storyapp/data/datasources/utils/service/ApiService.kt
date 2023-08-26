@@ -3,6 +3,7 @@ package com.ziss.storyapp.data.datasources.utils.service
 import com.ziss.storyapp.data.models.BaseResponse
 import com.ziss.storyapp.data.models.LoginResponse
 import com.ziss.storyapp.data.models.StoriesResponse
+import com.ziss.storyapp.data.models.StoryDetailResponse
 import com.ziss.storyapp.utils.Constants
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -39,20 +40,20 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Part("photo") photo: MultipartBody.Part,
         @Part("description") descriptions: RequestBody,
-        @Part("lat") lat: RequestBody?,
-        @Part("lon") lon: RequestBody?,
+        @Part("lat") lat: RequestBody? = null,
+        @Part("lon") lon: RequestBody? = null,
     ): Call<BaseResponse>
 
     @GET(Constants.STORIES_PATH)
     fun getStories(
         @Header("Authorization") token: String,
-        @Query("page") page: Int?,
-        @Query("size") size: Int?,
+        @Query("page") page: Int? = 1,
+        @Query("size") size: Int? = 10,
     ): Call<StoriesResponse>
 
     @GET(Constants.STORIES_PATH + "/{id}")
     fun getStoryById(
         @Header("Authorization") token: String,
         @Path("id") id: String,
-    ): Call<StoriesResponse>
+    ): Call<StoryDetailResponse>
 }

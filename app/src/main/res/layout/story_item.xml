@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="16dp"
     android:background="@color/light_white">
 
     <ImageView
@@ -32,11 +33,11 @@
         android:id="@+id/story_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_avatar"
         tools:ignore="ContentDescription"
         android:layout_marginTop="16dp"
         android:layout_below="@id/avatar"
-        android:layout_marginBottom="16dp"
         tools:srcCompat="@tools:sample/avatars" />
 
 
