@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -20,6 +21,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.ziss.storyapp.MainActivity
@@ -73,17 +75,30 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         setSupportActionBar(binding.appbarLayout.toolbar)
         supportActionBar?.title = getString(R.string.new_story_title)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         factory = ViewModelFactory.getInstance(dataStore)
 
         fetchToken()
         playAnimation()
 
-        binding.edAddDescription.setOnClickListener { setUploadButtonEnable() }
-
         binding.btnCamera.setOnClickListener(this)
         binding.btnGallery.setOnClickListener(this)
         binding.buttonAdd.setOnClickListener(this)
+
+        binding.ivPreview.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> setUploadButtonEnable() }
+        binding.edAddDescription.addTextChangedListener { setUploadButtonEnable() }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -160,9 +175,8 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setUploadButtonEnable() {
-        val isEnabled =
-            token != null && imageFile != null && !binding.edAddDescription.text.isNullOrEmpty()
-
+        val isEnabled = imageFile != null && !binding.edAddDescription.text.isNullOrEmpty()
+        Log.d("ENABLED", isEnabled.toString())
         binding.buttonAdd.isEnabled = isEnabled
     }
 
@@ -171,6 +185,11 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun uploadStory() {
+        if (binding.edAddDescription.text.isNullOrEmpty()) {
+            binding.edAddDescription.error = getString(R.string.empty_desc_alert)
+            return
+        }
+
         val description = binding.edAddDescription.text.toString()
 
         if (token != null) {

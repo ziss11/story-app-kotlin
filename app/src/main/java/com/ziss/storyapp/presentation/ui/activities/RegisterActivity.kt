@@ -58,31 +58,29 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                 val password = binding.edRegisterPassword.text.toString()
 
                 authViewModel.register(name, email, password).observe(this) { result ->
-                    if (result != null) {
-                        when (result) {
-                            is ResultState.Loading -> showLoading()
+                    when (result) {
+                        is ResultState.Loading -> showLoading()
 
-                            is ResultState.Success -> {
-                                showLoading(false)
+                        is ResultState.Success -> {
+                            showLoading(false)
 
-                                val message = this.getString(R.string.register_success)
-                                Intent().apply {
-                                    putExtra(REGISTER_SUCCESS, message)
-                                    setResult(RESULT_OK, this)
-                                }
-                                finish()
+                            val message = this.getString(R.string.register_success)
+                            Intent().apply {
+                                putExtra(REGISTER_SUCCESS, message)
+                                setResult(RESULT_OK, this)
                             }
+                            finish()
+                        }
 
-                            is ResultState.Failed -> {
-                                showLoading(false)
+                        is ResultState.Failed -> {
+                            showLoading(false)
 
-                                val message =
-                                    this.getString(R.string.email_exists)
-                                Snackbar.make(v, message, Snackbar.LENGTH_LONG)
-                                    .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
-                                    .setBackgroundTint(this.getColor(R.color.red))
-                                    .show()
-                            }
+                            val message =
+                                this.getString(R.string.email_exists)
+                            Snackbar.make(v, message, Snackbar.LENGTH_LONG)
+                                .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
+                                .setBackgroundTint(this.getColor(R.color.red))
+                                .show()
                         }
                     }
                 }

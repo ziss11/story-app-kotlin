@@ -68,24 +68,22 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 val password = binding.edLoginPassword.text.toString()
 
                 authViewModel.login(email, password).observe(this) { result ->
-                    if (result != null) {
-                        when (result) {
-                            is ResultState.Loading -> showLoading()
+                    when (result) {
+                        is ResultState.Loading -> showLoading()
 
-                            is ResultState.Success -> {
-                                showLoading(false)
-                                authViewModel.setToken(result.data.loginResult.token)
-                                MainActivity.start(this)
-                                finish()
-                            }
+                        is ResultState.Success -> {
+                            showLoading(false)
+                            authViewModel.setToken(result.data.loginResult.token)
+                            MainActivity.start(this)
+                            finish()
+                        }
 
-                            is ResultState.Failed -> {
-                                showLoading(false)
-                                val message = getString(R.string.email_pass_incorrect)
-                                Snackbar.make(v, message, Snackbar.LENGTH_LONG)
-                                    .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
-                                    .setBackgroundTint(getColor(R.color.red)).show()
-                            }
+                        is ResultState.Failed -> {
+                            showLoading(false)
+                            val message = getString(R.string.email_pass_incorrect)
+                            Snackbar.make(v, message, Snackbar.LENGTH_LONG)
+                                .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
+                                .setBackgroundTint(getColor(R.color.red)).show()
                         }
                     }
                 }

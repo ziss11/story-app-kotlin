@@ -33,4 +33,6 @@
     <string name="camera_authority">com.ziss.storyapp.mycamera</string>
     <string name="choose_a_picture">Pilih gambar</string>
     <string name="language">Bahasa</string>
+    <string name="empty_desc_alert">Deskripsi tidak boleh kosong</string>
+
 </resources>

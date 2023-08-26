@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -39,11 +40,23 @@ class StoryDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.appbarLayout.toolbar)
         supportActionBar?.title = getString(R.string.story_detail_title)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         factory = ViewModelFactory.getInstance(dataStore)
 
         playAnimation()
         fetchToken()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun playAnimation() {
@@ -56,8 +69,8 @@ class StoryDetailActivity : AppCompatActivity() {
 
         val objectAnimators = viewObjects.map {
             ObjectAnimator.ofFloat(it, View.ALPHA, 1f).apply {
-                duration = 100
-                startDelay = 50
+                duration = 150
+                startDelay = 150
             }
         }
 
