@@ -39,4 +39,7 @@
     <string name="upload">Upload</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="not_getting_permissions">Not getting permissions</string>
+    <string name="camera_authority">com.ziss.storyapp.mycamera</string>
+    <string name="choose_a_picture">Choose a picture</string>
 </resources>

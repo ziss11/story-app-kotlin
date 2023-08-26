@@ -54,7 +54,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         editTextListener()
 
         binding.btnLogin.setOnClickListener(this)
-
     }
 
     override fun onClick(v: View?) {
@@ -116,8 +115,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setMyButtonEnable() {
-        val isEnabled =
-            !binding.edLoginEmail.text.isNullOrEmpty() && !binding.edLoginPassword.text.isNullOrEmpty() && binding.edLoginEmail.error == null && binding.edLoginPassword.error == null
+        val isEnabled = !binding.edLoginEmail.text.isNullOrEmpty()
+                && !binding.edLoginPassword.text.isNullOrEmpty()
+                && binding.edLoginEmail.error == null
+                && binding.edLoginPassword.error == null
 
         binding.btnLogin.isEnabled = isEnabled
     }

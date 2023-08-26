@@ -49,15 +49,17 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
         lat: Double?,
         lon: Double?
     ): LiveData<ResultState<BaseResponse>> {
-        addStoryResult.value = ResultState.Loading
-
         val bearerToken = "Bearer $token"
         val requestImageFile = file.asRequestBody("image/jpg".toMediaType())
-        val imageMultipart = MultipartBody.Part.create(requestImageFile)
+        val imageMultipart = MultipartBody.Part.createFormData(
+            "photo", file.name, requestImageFile
+        )
 
         val descriptionBody = description.toRequestBody("text/plain".toMediaType())
         val latitudeBody = lat.toString().toRequestBody("text/plain".toMediaType())
         val longitudeBody = lon.toString().toRequestBody("text/plain".toMediaType())
+
+        addStoryResult.value = ResultState.Loading
 
         val client = if (lat != null && lon != null) {
             apiService.addStory(

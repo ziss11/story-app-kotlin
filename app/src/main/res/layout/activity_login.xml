@@ -43,7 +43,6 @@
         android:paddingHorizontal="16dp"
         tools:alpha="100" />
 
-
     <com.ziss.storyapp.presentation.components.PasswordEditText
         android:id="@+id/ed_login_password"
         android:layout_width="match_parent"

@@ -38,7 +38,7 @@ interface ApiService {
     @POST(Constants.STORIES_PATH)
     fun addStory(
         @Header("Authorization") token: String,
-        @Part("photo") photo: MultipartBody.Part,
+        @Part photo: MultipartBody.Part,
         @Part("description") descriptions: RequestBody,
         @Part("lat") lat: RequestBody? = null,
         @Part("lon") lon: RequestBody? = null,

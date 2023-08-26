@@ -5,7 +5,13 @@ import com.ziss.storyapp.data.repositories.StoryRepository
 import java.io.File
 
 class StoryViewModel(private val repository: StoryRepository) : ViewModel() {
-    fun addStory(token: String, file: File, description: String, lat: Double, lon: Double) =
+    fun addStory(
+        token: String,
+        file: File,
+        description: String,
+        lat: Double? = null,
+        lon: Double? = null
+    ) =
         repository.addStory(token, file, description, lat, lon)
 
     fun getStories(token: String, page: Int? = 1, size: Int? = 10) =
