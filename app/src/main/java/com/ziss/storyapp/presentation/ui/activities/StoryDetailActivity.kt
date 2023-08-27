@@ -2,7 +2,6 @@ package com.ziss.storyapp.presentation.ui.activities
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -14,7 +13,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import com.ziss.storyapp.R
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.dataStore
@@ -156,11 +154,7 @@ class StoryDetailActivity : AppCompatActivity() {
         fun start(context: Context, id: String) {
             Intent(context, StoryDetailActivity::class.java).apply {
                 this.putExtra(EXTRA_ID, id)
-                context.startActivity(
-                    this,
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity)
-                        .toBundle()
-                )
+                context.startActivity(this)
             }
         }
     }

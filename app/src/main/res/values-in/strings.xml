@@ -34,5 +34,5 @@
     <string name="choose_a_picture">Pilih gambar</string>
     <string name="language">Bahasa</string>
     <string name="empty_desc_alert">Deskripsi tidak boleh kosong</string>
-
+    <string name="add_story_error_alert">Tidak dapat menambahkan story</string>
 </resources>
