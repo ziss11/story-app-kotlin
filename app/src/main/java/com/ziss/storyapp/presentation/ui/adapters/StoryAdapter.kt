@@ -2,6 +2,7 @@ package com.ziss.storyapp.presentation.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ziss.storyapp.data.models.StoryModel
@@ -14,7 +15,7 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.ListViewHolder>() {
     private val stories = ArrayList<StoryModel>()
 
     interface OnItemClickCallback {
-        fun onItemClicked(story: StoryModel)
+        fun onItemClicked(story: StoryModel, storyImage: ImageView)
     }
 
     inner class ListViewHolder(private val binding: StoryItemBinding) :
@@ -25,7 +26,7 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.ListViewHolder>() {
                 ivItemPhoto.loadImage(story.photoUrl)
             }
             itemView.setOnClickListener {
-                onItemClickCallback.onItemClicked(story)
+                onItemClickCallback.onItemClicked(story, binding.ivItemPhoto)
             }
         }
     }

@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -26,9 +25,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.ziss.storyapp.MainActivity
 import com.ziss.storyapp.R
-import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityAddStoryBinding
-import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
 import com.ziss.storyapp.presentation.viewmodels.StoryViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
 import com.ziss.storyapp.utils.ResultState
@@ -42,11 +39,9 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var currentPhotoPath: String
 
-    private val authViewModel: AuthViewModel by viewModels { factory }
     private val storyViewModel: StoryViewModel by viewModels { factory }
 
     private var imageFile: File? = null
-    private var token: String? = null
 
     private val launcherIntentCamera =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -77,9 +72,8 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        factory = ViewModelFactory.getInstance(dataStore)
+        factory = ViewModelFactory.getInstance(this)
 
-        fetchToken()
         playAnimation()
 
         binding.btnCamera.setOnClickListener(this)
@@ -176,12 +170,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun setUploadButtonEnable() {
         val isEnabled = imageFile != null && !binding.edAddDescription.text.isNullOrEmpty()
-        Log.d("ENABLED", isEnabled.toString())
         binding.buttonAdd.isEnabled = isEnabled
-    }
-
-    private fun fetchToken() {
-        authViewModel.getToken().observe(this) { token = it }
     }
 
     private fun uploadStory() {
@@ -192,32 +181,30 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
 
         val description = binding.edAddDescription.text.toString()
 
-        if (token != null) {
-            storyViewModel.addStory(token!!, imageFile!!, description).observe(this) { result ->
-                when (result) {
-                    is ResultState.Loading -> showLoading()
-                    is ResultState.Success -> {
-                        showLoading(false)
+        storyViewModel.addStory(imageFile!!, description).observe(this) { result ->
+            when (result) {
+                is ResultState.Loading -> showLoading()
+                is ResultState.Success -> {
+                    showLoading(false)
 
-                        if (!result.data.error) {
-                            MainActivity.start(this)
-                            finish()
-                        } else {
-                            Snackbar.make(binding.root, result.data.message, Snackbar.LENGTH_LONG)
-                                .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
-                                .setBackgroundTint(this.getColor(R.color.orange)).show()
-                        }
-                    }
-
-                    is ResultState.Failed -> {
-                        showLoading(false)
-                        Snackbar.make(
-                            binding.root,
-                            getString(R.string.add_story_error_alert), Snackbar.LENGTH_LONG
-                        )
+                    if (!result.data.error) {
+                        MainActivity.start(this)
+                        finish()
+                    } else {
+                        Snackbar.make(binding.root, result.data.message, Snackbar.LENGTH_LONG)
                             .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
                             .setBackgroundTint(this.getColor(R.color.orange)).show()
                     }
+                }
+
+                is ResultState.Failed -> {
+                    showLoading(false)
+                    Snackbar.make(
+                        binding.root,
+                        getString(R.string.add_story_error_alert), Snackbar.LENGTH_LONG
+                    )
+                        .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
+                        .setBackgroundTint(this.getColor(R.color.orange)).show()
                 }
             }
         }

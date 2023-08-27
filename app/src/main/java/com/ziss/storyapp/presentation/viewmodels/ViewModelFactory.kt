@@ -1,7 +1,6 @@
 package com.ziss.storyapp.presentation.viewmodels
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ziss.storyapp.Injection.provideAuthRepository
@@ -30,10 +29,12 @@ class ViewModelFactory private constructor(
     companion object {
         private var instance: ViewModelFactory? = null
 
-        fun getInstance(dataStore: DataStore<Preferences>) = instance ?: synchronized(this) {
-            instance ?: ViewModelFactory(
-                provideAuthRepository(dataStore), provideStoryRepository()
-            )
-        }.also { instance = it }
+        fun getInstance(context: Context) =
+            instance ?: synchronized(this) {
+                instance ?: ViewModelFactory(
+                    provideAuthRepository(context),
+                    provideStoryRepository(context)
+                )
+            }.also { instance = it }
     }
 }

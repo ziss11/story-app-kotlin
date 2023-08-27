@@ -4,31 +4,21 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import com.ziss.storyapp.R
 import com.ziss.storyapp.data.models.StoryModel
-import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityStoryDetailBinding
-import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
-import com.ziss.storyapp.presentation.viewmodels.StoryViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
-import com.ziss.storyapp.utils.ResultState
 import com.ziss.storyapp.utils.loadImage
 
 class StoryDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryDetailBinding
     private lateinit var factory: ViewModelFactory
-
-    private val authViewModel: AuthViewModel by viewModels { factory }
-    private val storyViewModel: StoryViewModel by viewModels { factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +30,10 @@ class StoryDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        factory = ViewModelFactory.getInstance(dataStore)
+        factory = ViewModelFactory.getInstance(this)
 
         playAnimation()
-        fetchToken()
+        fetchStory()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -59,9 +49,7 @@ class StoryDetailActivity : AppCompatActivity() {
 
     private fun playAnimation() {
         val viewObjects = listOf(
-            binding.ivAvatar,
             binding.tvItemName,
-            binding.ivItemPhoto,
             binding.tvDetailDescription,
         )
 
@@ -78,83 +66,34 @@ class StoryDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setDescription(text: String): SpannableStringBuilder {
-        val spannable = SpannableStringBuilder(text)
-        spannable.apply {
-            setSpan(
-                StyleSpan(Typeface.BOLD), 0, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        return spannable
-    }
-
-    private fun setData(story: StoryModel) {
+    private fun setData(story: StoryModel?) {
         binding.apply {
-            tvItemName.text = story.name
-            tvDetailDescription.text = setDescription("${story.name} ${story.description}")
-            ivItemPhoto.loadImage(story.photoUrl)
+            tvItemName.text = story?.name
+            tvDetailDescription.text = story?.description
+            ivItemPhoto.loadImage(story?.photoUrl)
         }
     }
 
-    private fun fetchToken() {
-        authViewModel.getToken().observe(this) {
-            fetchStory(it)
-        }
-    }
-
-    private fun fetchStory(token: String) {
-        val id = intent.getStringExtra(EXTRA_ID) as String
-        storyViewModel.getStoryById(token, id).observe(this) { result ->
-            when (result) {
-                is ResultState.Loading -> {
-                    showLoading()
-                    showMessage(false)
-                }
-
-                is ResultState.Success -> {
-                    showLoading(false)
-                    showMessage(false)
-                    setData(result.data.story)
-                }
-
-                is ResultState.Failed -> {
-                    showLoading(false)
-                    showMessage()
-                }
-            }
-        }
-    }
-
-    private fun showLoading(isLoading: Boolean = true) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-            binding.rlStory.visibility = View.INVISIBLE
+    private fun fetchStory() {
+        val story = if (Build.VERSION.SDK_INT >= 33) {
+            intent.getParcelableExtra(EXTRA_STORY, StoryModel::class.java)
         } else {
-            binding.progressBar.visibility = View.GONE
-            binding.rlStory.visibility = View.VISIBLE
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(EXTRA_STORY)
         }
-    }
-
-    private fun showMessage(isShowMessage: Boolean = true) {
-        if (isShowMessage) {
-            binding.apply {
-                tvMessage.visibility = View.VISIBLE
-                rlStory.visibility = View.GONE
-            }
-        } else {
-            binding.apply {
-                tvMessage.visibility = View.GONE
-                rlStory.visibility = View.VISIBLE
-            }
-        }
+        setData(story)
     }
 
     companion object {
-        const val EXTRA_ID = "extra_id"
-        fun start(context: Context, id: String) {
+        const val EXTRA_STORY = "extra_story"
+        fun start(
+            context: Context,
+            story: StoryModel,
+            optionsCompat: ActivityOptionsCompat
+        ) {
             Intent(context, StoryDetailActivity::class.java).apply {
-                this.putExtra(EXTRA_ID, id)
-                context.startActivity(this)
+                this.putExtra(EXTRA_STORY, story)
+                context.startActivity(this, optionsCompat.toBundle())
             }
         }
     }

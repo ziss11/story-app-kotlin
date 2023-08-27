@@ -1,5 +1,6 @@
 package com.ziss.storyapp.data.datasources.auth
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -87,8 +88,8 @@ class AuthRemoteDataSourceImpl private constructor(private val apiService: ApiSe
         private var TAG = AuthRemoteDataSource::class.java.simpleName
         private var instance: AuthRemoteDataSourceImpl? = null
 
-        fun getInstance() = instance ?: synchronized(this) {
-            instance ?: AuthRemoteDataSourceImpl(provideApiService())
+        fun getInstance(context: Context) = instance ?: synchronized(this) {
+            instance ?: AuthRemoteDataSourceImpl(provideApiService(context))
         }.also { instance = it }
     }
 }

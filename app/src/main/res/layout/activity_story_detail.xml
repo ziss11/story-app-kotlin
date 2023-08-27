@@ -15,89 +15,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <RelativeLayout
+            android:id="@+id/rl_story"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:paddingBottom="30dp">
 
-            <RelativeLayout
-                android:id="@+id/rl_story"
+            <ImageView
+                android:id="@+id/iv_item_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="50dp">
-
-                <ImageView
-                    android:id="@+id/iv_avatar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="16dp"
-                    android:alpha="0"
-                    android:src="@drawable/ic_avatar"
-                    tools:alpha="100"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:id="@+id/tv_item_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/iv_avatar"
-                    android:layout_alignBottom="@id/iv_avatar"
-                    android:layout_centerInParent="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_toEndOf="@id/iv_avatar"
-                    android:alpha="0"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold|normal"
-                    tools:alpha="100"
-                    tools:text="GoneX11" />
-
-                <ImageView
-                    android:id="@+id/iv_item_photo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/iv_avatar"
-                    android:layout_marginTop="16dp"
-                    android:alpha="0"
-                    android:scaleType="fitCenter"
-                    tools:alpha="100"
-                    tools:ignore="ContentDescription"
-                    tools:srcCompat="@tools:sample/avatars" />
-
-                <TextView
-                    android:id="@+id/tv_detail_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/iv_item_photo"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="8dp"
-                    android:alpha="0"
-                    android:textSize="14sp"
-                    tools:alpha="100"
-                    tools:text="Description" />
-
-            </RelativeLayout>
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="?attr/progressBarStyle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/orange"
-                android:visibility="gone" />
+                android:scaleType="fitCenter"
+                android:transitionName="item_photo"
+                tools:ignore="ContentDescription"
+                tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
-                android:id="@+id/tv_message"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/story_not_found"
-                android:visibility="visible" />
+                android:id="@+id/tv_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_item_photo"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:alpha="0"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold|normal"
+                tools:alpha="100"
+                tools:text="GoneX11" />
 
-        </FrameLayout>
+            <TextView
+                android:id="@+id/tv_detail_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_item_name"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:alpha="0"
+                android:textSize="14sp"
+                tools:alpha="100"
+                tools:text="Description" />
+
+        </RelativeLayout>
 
     </ScrollView>
 

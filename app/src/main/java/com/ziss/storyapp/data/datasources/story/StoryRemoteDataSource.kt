@@ -1,5 +1,6 @@
 package com.ziss.storyapp.data.datasources.story
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -7,7 +8,6 @@ import com.ziss.storyapp.Injection.provideApiService
 import com.ziss.storyapp.data.datasources.utils.service.ApiService
 import com.ziss.storyapp.data.models.BaseResponse
 import com.ziss.storyapp.data.models.StoriesResponse
-import com.ziss.storyapp.data.models.StoryDetailResponse
 import com.ziss.storyapp.utils.ResultState
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -20,7 +20,6 @@ import java.io.File
 
 interface StoryRemoteDataSource {
     fun addStory(
-        token: String,
         file: File,
         description: String,
         lat: Double?,
@@ -28,28 +27,22 @@ interface StoryRemoteDataSource {
     ): LiveData<ResultState<BaseResponse>>
 
     fun getStories(
-        token: String,
         page: Int?,
         size: Int?
     ): LiveData<ResultState<StoriesResponse>>
-
-    fun getStoryById(token: String, id: String): LiveData<ResultState<StoryDetailResponse>>
 }
 
 class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiService) :
     StoryRemoteDataSource {
     private val addStoryResult = MediatorLiveData<ResultState<BaseResponse>>()
     private val storiesResult = MediatorLiveData<ResultState<StoriesResponse>>()
-    private val storyDetailResult = MediatorLiveData<ResultState<StoryDetailResponse>>()
 
     override fun addStory(
-        token: String,
         file: File,
         description: String,
         lat: Double?,
         lon: Double?
     ): LiveData<ResultState<BaseResponse>> {
-        val bearerToken = "Bearer $token"
         val requestImageFile = file.asRequestBody("image/jpg".toMediaType())
         val imageMultipart = MultipartBody.Part.createFormData(
             "photo", file.name, requestImageFile
@@ -63,14 +56,13 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
 
         val client = if (lat != null && lon != null) {
             apiService.addStory(
-                bearerToken,
                 imageMultipart,
                 descriptionBody,
                 latitudeBody,
                 longitudeBody
             )
         } else {
-            apiService.addStory(bearerToken, imageMultipart, descriptionBody)
+            apiService.addStory(imageMultipart, descriptionBody)
         }
 
         client.enqueue(object : Callback<BaseResponse> {
@@ -94,15 +86,10 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
         return addStoryResult
     }
 
-    override fun getStories(
-        token: String,
-        page: Int?,
-        size: Int?
-    ): LiveData<ResultState<StoriesResponse>> {
+    override fun getStories(page: Int?, size: Int?): LiveData<ResultState<StoriesResponse>> {
         storiesResult.value = ResultState.Loading
 
-        val bearerToken = "Bearer $token"
-        val client = apiService.getStories(bearerToken, page, size)
+        val client = apiService.getStories(page, size)
         client.enqueue(object : Callback<StoriesResponse> {
             override fun onResponse(
                 call: Call<StoriesResponse>,
@@ -127,45 +114,12 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
         return storiesResult
     }
 
-
-    override fun getStoryById(
-        token: String,
-        id: String
-    ): LiveData<ResultState<StoryDetailResponse>> {
-        storyDetailResult.value = ResultState.Loading
-
-        val bearerToken = "Bearer $token"
-        val client = apiService.getStoryById(bearerToken, id)
-        client.enqueue(object : Callback<StoryDetailResponse> {
-            override fun onResponse(
-                call: Call<StoryDetailResponse>,
-                response: Response<StoryDetailResponse>
-            ) {
-                val responseBody = response.body()
-
-                if (response.isSuccessful && responseBody != null) {
-                    storyDetailResult.value = ResultState.Success(responseBody)
-                } else {
-                    storyDetailResult.value = ResultState.Failed(response.message())
-                    Log.d(TAG, response.message())
-                }
-            }
-
-            override fun onFailure(call: Call<StoryDetailResponse>, t: Throwable) {
-                storyDetailResult.value = ResultState.Failed(t.message.toString())
-                Log.d(TAG, t.message.toString())
-            }
-        })
-
-        return storyDetailResult
-    }
-
     companion object {
         private var TAG = StoryRemoteDataSource::class.java.simpleName
         private var instance: StoryRemoteDataSourceImpl? = null
 
-        fun getInstance() = instance ?: synchronized(this) {
-            instance ?: StoryRemoteDataSourceImpl(provideApiService())
+        fun getInstance(context: Context) = instance ?: synchronized(this) {
+            instance ?: StoryRemoteDataSourceImpl(provideApiService(context))
         }.also { instance = it }
     }
 }

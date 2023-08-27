@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appbarLayout.toolbar)
         supportActionBar?.title = getString(R.string.story_title)
 
-        factory = ViewModelFactory.getInstance(dataStore)
+        factory = ViewModelFactory.getInstance(this)
         checkAuth()
 
         setListAdapter()
@@ -90,8 +91,13 @@ class MainActivity : AppCompatActivity() {
 
         storyAdapter = StoryAdapter()
         storyAdapter.setOnClickItemCallback(object : StoryAdapter.OnItemClickCallback {
-            override fun onItemClicked(story: StoryModel) {
-                StoryDetailActivity.start(this@MainActivity, story.id)
+            override fun onItemClicked(story: StoryModel, storyImage: ImageView) {
+                val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this@MainActivity,
+                    storyImage,
+                    "item_photo"
+                )
+                StoryDetailActivity.start(this@MainActivity, story, optionsCompat)
             }
         })
 
@@ -99,17 +105,11 @@ class MainActivity : AppCompatActivity() {
             rvStory.adapter = storyAdapter
             rvStory.layoutManager = layout
         }
-        fetchToken()
+        fetchStories()
     }
 
-    private fun fetchToken() {
-        authViewModel.getToken().observe(this) {
-            fetchStories(it)
-        }
-    }
-
-    private fun fetchStories(token: String) {
-        storyViewModel.getStories(token).observe(this) { result ->
+    private fun fetchStories() {
+        storyViewModel.getStories().observe(this) { result ->
             when (result) {
                 is ResultState.Loading -> {
                     showLoading()
