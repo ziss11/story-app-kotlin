@@ -19,10 +19,10 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.databinding.ActivityMainBinding
-import com.ziss.storyapp.presentation.ui.activities.AddStoryActivity
-import com.ziss.storyapp.presentation.ui.activities.LoginActivity
-import com.ziss.storyapp.presentation.ui.activities.StoryDetailActivity
-import com.ziss.storyapp.presentation.ui.adapters.StoryAdapter
+import com.ziss.storyapp.presentation.adapters.StoryAdapter
+import com.ziss.storyapp.presentation.ui.addstory.AddStoryActivity
+import com.ziss.storyapp.presentation.ui.login.LoginActivity
+import com.ziss.storyapp.presentation.ui.storydetail.StoryDetailActivity
 import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
 import com.ziss.storyapp.presentation.viewmodels.StoryViewModel
 import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
