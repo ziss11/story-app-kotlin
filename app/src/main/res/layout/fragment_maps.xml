@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="90dp"
-        android:contentDescription="@string/zoom_in"
+        android:contentDescription="@string/zoom_out"
         android:foregroundGravity="center"
         android:src="@drawable/ic_remove_18"
         app:fabCustomSize="30dp"

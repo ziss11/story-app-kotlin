@@ -1,22 +1,53 @@
 package com.ziss.storyapp.data.repositories
 
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.ziss.storyapp.Injection.provideStoryDatabase
 import com.ziss.storyapp.Injection.provideStoryRemoteDataSource
 import com.ziss.storyapp.data.datasources.story.StoryRemoteDataSource
+import com.ziss.storyapp.data.datasources.utils.StoryRemoteMediator
+import com.ziss.storyapp.data.datasources.utils.db.StoryDatabase
+import com.ziss.storyapp.data.models.StoryModel
 import java.io.File
 
-class StoryRepository private constructor(private val remoteDataSource: StoryRemoteDataSource) {
+class StoryRepository private constructor(
+    private val remoteDataSource: StoryRemoteDataSource,
+    private val database: StoryDatabase
+) {
     fun addStory(
         token: String, file: File, description: String, lat: Double?, lon: Double?
     ) = remoteDataSource.addStory(token, file, description, lat, lon)
 
-    fun getStories(token: String) = remoteDataSource.getStories(token)
+    @OptIn(ExperimentalPagingApi::class)
+    fun getStories(token: String): LiveData<PagingData<StoryModel>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10
+            ),
+            remoteMediator = StoryRemoteMediator(token, remoteDataSource, database),
+            pagingSourceFactory = {
+                database.storyDao().getStories()
+            }
+        ).liveData
+    }
+
     fun getStoriesWithLocation(token: String) = remoteDataSource.getStoriesWithLocation(token)
 
     companion object {
+        @Volatile
         private var instance: StoryRepository? = null
 
-        fun getInstance() = instance ?: synchronized(this) {
-            instance ?: StoryRepository(provideStoryRemoteDataSource())
+        @JvmStatic
+        fun getInstance(context: Context) = instance ?: synchronized(this) {
+            instance ?: StoryRepository(
+                provideStoryRemoteDataSource(),
+                provideStoryDatabase(context)
+            )
         }.also { instance = it }
     }
 }

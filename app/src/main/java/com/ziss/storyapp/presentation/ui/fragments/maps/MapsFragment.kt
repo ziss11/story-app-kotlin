@@ -1,6 +1,7 @@
 package com.ziss.storyapp.presentation.ui.fragments.maps
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.ziss.storyapp.R
-import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.FragmentMapsBinding
 import com.ziss.storyapp.presentation.ViewModelFactory
 import com.ziss.storyapp.presentation.ui.fragments.home.MapsViewModel
@@ -41,6 +42,7 @@ class MapsFragment : Fragment() {
         map.uiSettings.isCompassEnabled = true
         map.uiSettings.isMapToolbarEnabled = false
 
+        setMapStyle()
         fetchStories()
     }
 
@@ -54,7 +56,7 @@ class MapsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        factory = ViewModelFactory.getInstance(requireActivity().dataStore)
+        factory = ViewModelFactory.getInstance(requireActivity())
         fetchToken()
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -68,6 +70,21 @@ class MapsFragment : Fragment() {
         }
     }
 
+    private fun setMapStyle() {
+        try {
+            val success = map.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    requireActivity(),
+                    R.raw.maps_style
+                )
+            )
+            if (!success) {
+                Log.d(TAG, "Style paring failed")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Can't find style. Error", e)
+        }
+    }
 
     private fun fetchToken() {
         loginViewModel.getToken().observe(requireActivity()) { token = it }
@@ -96,5 +113,9 @@ class MapsFragment : Fragment() {
                 else -> {}
             }
         }
+    }
+
+    companion object {
+        private val TAG = MapsFragment::class.java.simpleName
     }
 }

@@ -8,13 +8,13 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.ziss.storyapp.presentation.ui.fragments.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="@string/story_title"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_maps"
         android:name="com.ziss.storyapp.presentation.ui.fragments.maps.MapsFragment"
-        android:label="@string/title_maps"
+        android:label="@string/map_title"
         tools:layout="@layout/fragment_maps" />
 
 </navigation>

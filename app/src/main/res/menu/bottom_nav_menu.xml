@@ -4,10 +4,10 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_24"
-        android:title="@string/title_home" />
+        android:title="@string/story_title" />
 
     <item
         android:id="@+id/navigation_maps"
         android:icon="@drawable/ic_maps_24"
-        android:title="@string/title_maps" />
+        android:title="@string/map_title" />
 </menu>

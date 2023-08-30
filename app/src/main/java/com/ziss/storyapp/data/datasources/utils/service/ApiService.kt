@@ -43,9 +43,11 @@ interface ApiService {
     ): Call<BaseResponse>
 
     @GET(Constants.STORIES_PATH)
-    fun getStories(
+    suspend fun getStories(
         @Header("Authorization") token: String,
-    ): Call<StoriesResponse>
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): StoriesResponse
 
     @GET(Constants.STORIES_PATH)
     fun getStoriesWithLocation(

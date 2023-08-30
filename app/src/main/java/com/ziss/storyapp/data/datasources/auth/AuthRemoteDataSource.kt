@@ -85,8 +85,11 @@ class AuthRemoteDataSourceImpl private constructor(private val apiService: ApiSe
 
     companion object {
         private var TAG = AuthRemoteDataSource::class.java.simpleName
+
+        @Volatile
         private var instance: AuthRemoteDataSourceImpl? = null
 
+        @JvmStatic
         fun getInstance() = instance ?: synchronized(this) {
             instance ?: AuthRemoteDataSourceImpl(provideApiService())
         }.also { instance = it }

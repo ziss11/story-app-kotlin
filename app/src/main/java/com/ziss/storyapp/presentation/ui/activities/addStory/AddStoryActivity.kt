@@ -25,7 +25,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.ziss.storyapp.MainActivity
 import com.ziss.storyapp.R
-import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityAddStoryBinding
 import com.ziss.storyapp.presentation.ViewModelFactory
 import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
@@ -74,7 +73,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        factory = ViewModelFactory.getInstance(dataStore)
+        factory = ViewModelFactory.getInstance(this)
 
         playAnimation()
 

@@ -3,16 +3,15 @@ package com.ziss.storyapp.presentation.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.databinding.StoryItemBinding
-import com.ziss.storyapp.utils.StoryDiffCallback
 import com.ziss.storyapp.utils.loadImage
 
-class StoryAdapter : RecyclerView.Adapter<StoryAdapter.ListViewHolder>() {
+class StoryAdapter : PagingDataAdapter<StoryModel, StoryAdapter.ListViewHolder>(DIFF_CALLBACK) {
     private lateinit var onItemClickCallback: OnItemClickCallback
-    private val stories = ArrayList<StoryModel>()
 
     interface OnItemClickCallback {
         fun onItemClicked(story: StoryModel, storyImage: ImageView)
@@ -31,16 +30,6 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.ListViewHolder>() {
         }
     }
 
-    fun setStories(stories: List<StoryModel>) {
-        val diffCallback = StoryDiffCallback(this.stories, stories)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-
-        this.stories.clear()
-        this.stories.addAll(stories)
-
-        diffResult.dispatchUpdatesTo(this)
-    }
-
     fun setOnClickItemCallback(onItemClickCallback: OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback
     }
@@ -51,9 +40,17 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.ListViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val story = stories[position]
-        holder.bind(story)
+        val story = getItem(position)
+        if (story != null) holder.bind(story)
     }
 
-    override fun getItemCount() = stories.size
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryModel>() {
+            override fun areItemsTheSame(oldItem: StoryModel, newItem: StoryModel) =
+                oldItem == newItem
+
+            override fun areContentsTheSame(oldItem: StoryModel, newItem: StoryModel) =
+                oldItem.id == newItem.id
+        }
+    }
 }

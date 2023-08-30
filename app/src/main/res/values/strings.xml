@@ -37,9 +37,7 @@
     <string name="avatar_image">Avatar Image</string>
     <string name="story_image">Story Image</string>
     <string name="create_new_story">Create new story</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_home">Home</string>
-    <string name="title_maps">Maps</string>
     <string name="zoom_in">Zoom In</string>
+    <string name="zoom_out">Zoom Out</string>
+    <string name="map_title">Story Map</string>
 </resources>

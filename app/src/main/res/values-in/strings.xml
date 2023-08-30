@@ -38,4 +38,8 @@
     <string name="avatar_image">Gambar Avatar</string>
     <string name="story_image">Gambar Story</string>
     <string name="create_new_story">Buat story baru</string>
+    <string name="zoom_in">Perbesar</string>
+    <string name="zoom_out">Perkecil</string>
+    <string name="map_title">Peta Story</string>
+
 </resources>

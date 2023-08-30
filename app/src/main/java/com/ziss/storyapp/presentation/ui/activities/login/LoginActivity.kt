@@ -21,7 +21,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.ziss.storyapp.MainActivity
 import com.ziss.storyapp.R
-import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityLoginBinding
 import com.ziss.storyapp.presentation.ViewModelFactory
 import com.ziss.storyapp.presentation.ui.activities.register.RegisterActivity
@@ -50,7 +49,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityLoginBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        factory = ViewModelFactory.getInstance(dataStore)
+        factory = ViewModelFactory.getInstance(this)
 
         checkAuth()
 

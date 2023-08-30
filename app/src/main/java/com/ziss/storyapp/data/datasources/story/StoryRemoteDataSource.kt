@@ -26,14 +26,18 @@ interface StoryRemoteDataSource {
         lon: Double?
     ): LiveData<ResultState<BaseResponse>>
 
-    fun getStories(token: String): LiveData<ResultState<StoriesResponse>>
+    suspend fun getStories(
+        token: String,
+        page: Int,
+        size: Int
+    ): StoriesResponse
+
     fun getStoriesWithLocation(token: String): LiveData<ResultState<StoriesResponse>>
 }
 
 class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiService) :
     StoryRemoteDataSource {
     private val addStoryResult = MediatorLiveData<ResultState<BaseResponse>>()
-    private val storiesResult = MediatorLiveData<ResultState<StoriesResponse>>()
     private val storiesWithLocationResult = MediatorLiveData<ResultState<StoriesResponse>>()
 
     override fun addStory(
@@ -88,34 +92,8 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
         return addStoryResult
     }
 
-    override fun getStories(token: String): LiveData<ResultState<StoriesResponse>> {
-        storiesResult.value = ResultState.Loading
-
-        val bearerToken = "Bearer $token"
-        val client = apiService.getStories(bearerToken)
-        client.enqueue(object : Callback<StoriesResponse> {
-            override fun onResponse(
-                call: Call<StoriesResponse>,
-                response: Response<StoriesResponse>
-            ) {
-                val responseBody = response.body()
-
-                if (response.isSuccessful && responseBody != null) {
-                    storiesResult.value = ResultState.Success(responseBody)
-                } else {
-                    storiesResult.value = ResultState.Failed(response.message())
-                    Log.d(TAG, response.message())
-                }
-            }
-
-            override fun onFailure(call: Call<StoriesResponse>, t: Throwable) {
-                storiesResult.value = ResultState.Failed(t.message.toString())
-                Log.d(TAG, t.message.toString())
-            }
-        })
-
-        return storiesResult
-    }
+    override suspend fun getStories(token: String, page: Int, size: Int) =
+        apiService.getStories(token, page, size)
 
     override fun getStoriesWithLocation(token: String): LiveData<ResultState<StoriesResponse>> {
         storiesWithLocationResult.value = ResultState.Loading
@@ -148,8 +126,11 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
 
     companion object {
         private var TAG = StoryRemoteDataSource::class.java.simpleName
+
+        @Volatile
         private var instance: StoryRemoteDataSourceImpl? = null
 
+        @JvmStatic
         fun getInstance() = instance ?: synchronized(this) {
             instance ?: StoryRemoteDataSourceImpl(provideApiService())
         }.also { instance = it }
