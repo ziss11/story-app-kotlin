@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.storyDetail
+package com.ziss.storyapp.presentation.ui.activities.storyDetail
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator

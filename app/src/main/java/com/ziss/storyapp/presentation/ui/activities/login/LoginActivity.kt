@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.login
+package com.ziss.storyapp.presentation.ui.activities.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -19,12 +19,12 @@ import androidx.core.content.getSystemService
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.ziss.storyapp.MainActivity
 import com.ziss.storyapp.R
+import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityLoginBinding
 import com.ziss.storyapp.presentation.ViewModelFactory
-import com.ziss.storyapp.presentation.ui.home.HomeActivity
-import com.ziss.storyapp.presentation.ui.home.dataStore
-import com.ziss.storyapp.presentation.ui.register.RegisterActivity
+import com.ziss.storyapp.presentation.ui.activities.register.RegisterActivity
 import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
 import com.ziss.storyapp.utils.ResultState
 import java.util.Locale
@@ -52,16 +52,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
         factory = ViewModelFactory.getInstance(dataStore)
 
+        checkAuth()
+
         setSpanText()
         playAnimation()
         editTextListener()
 
         binding.btnLogin.setOnClickListener(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        checkAuth()
     }
 
     override fun onClick(v: View?) {
@@ -81,7 +78,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         is ResultState.Success -> {
                             showLoading(false)
                             loginViewModel.setToken(result.data.loginResult.token)
-                            HomeActivity.start(this)
+                            MainActivity.start(this)
                             finish()
 
                         }
@@ -102,7 +99,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private fun checkAuth() {
         loginViewModel.getToken().observe(this) { token ->
             if (!token.isNullOrEmpty()) {
-                HomeActivity.start(this)
+                MainActivity.start(this)
                 finish()
             }
         }

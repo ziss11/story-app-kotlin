@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.addStory
+package com.ziss.storyapp.presentation.ui.activities.addStory
 
 import androidx.lifecycle.ViewModel
 import com.ziss.storyapp.data.repositories.StoryRepository

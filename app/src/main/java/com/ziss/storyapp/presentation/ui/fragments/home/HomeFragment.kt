@@ -1,67 +1,76 @@
-package com.ziss.storyapp.presentation.ui.home
+package com.ziss.storyapp.presentation.ui.fragments.home
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
+import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ziss.storyapp.R
 import com.ziss.storyapp.data.models.StoryModel
-import com.ziss.storyapp.databinding.ActivityMainBinding
+import com.ziss.storyapp.dataStore
+import com.ziss.storyapp.databinding.FragmentHomeBinding
 import com.ziss.storyapp.presentation.ViewModelFactory
 import com.ziss.storyapp.presentation.adapters.StoryAdapter
-import com.ziss.storyapp.presentation.ui.addStory.AddStoryActivity
-import com.ziss.storyapp.presentation.ui.login.LoginActivity
-import com.ziss.storyapp.presentation.ui.storyDetail.StoryDetailActivity
+import com.ziss.storyapp.presentation.ui.activities.addStory.AddStoryActivity
+import com.ziss.storyapp.presentation.ui.activities.login.LoginActivity
+import com.ziss.storyapp.presentation.ui.activities.storyDetail.StoryDetailActivity
 import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
 import com.ziss.storyapp.utils.ResultState
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth")
+class HomeFragment : Fragment(), MenuProvider {
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
-class HomeActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
     private lateinit var factory: ViewModelFactory
     private lateinit var storyAdapter: StoryAdapter
 
     private val loginViewModel: LoginViewModel by viewModels { factory }
     private val homeViewModel: HomeViewModel by viewModels { factory }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
+        return _binding?.root
+    }
 
-        setSupportActionBar(binding.appbarLayout.toolbar)
-        supportActionBar?.title = getString(R.string.story_title)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(
+            this,
+            viewLifecycleOwner,
+            androidx.lifecycle.Lifecycle.State.RESUMED
+        )
 
-        factory = ViewModelFactory.getInstance(dataStore)
+        factory = ViewModelFactory.getInstance(requireActivity().dataStore)
 
+        setToolbar()
         setListAdapter()
 
         binding.fabAddStory.setOnClickListener {
-            AddStoryActivity.start(this@HomeActivity)
+            AddStoryActivity.start(requireActivity())
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.home_menu, menu)
-        return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
             R.id.action_logout -> {
                 logoutDialog()
                 true
@@ -72,20 +81,26 @@ class HomeActivity : AppCompatActivity() {
                 true
             }
 
-            else -> super.onOptionsItemSelected(item)
+            else -> false
         }
     }
 
+    private fun setToolbar() {
+        val activity = activity as AppCompatActivity
+        activity.setSupportActionBar(binding.appbarLayout.toolbar)
+        activity.supportActionBar?.title = getString(R.string.story_title)
+    }
+
     private fun setListAdapter() {
-        val layout = LinearLayoutManager(this)
+        val layout = LinearLayoutManager(requireActivity())
 
         storyAdapter = StoryAdapter()
         storyAdapter.setOnClickItemCallback(object : StoryAdapter.OnItemClickCallback {
             override fun onItemClicked(story: StoryModel, storyImage: ImageView) {
                 val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this@HomeActivity, storyImage, "item_photo"
+                    requireActivity(), storyImage, "item_photo"
                 )
-                StoryDetailActivity.start(this@HomeActivity, story, optionsCompat)
+                StoryDetailActivity.start(requireActivity(), story, optionsCompat)
             }
         })
 
@@ -98,11 +113,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
-        loginViewModel.getToken().observe(this) { token -> fetchStories(token) }
+        loginViewModel.getToken().observe(requireActivity()) { token -> fetchStories(token) }
     }
 
     private fun fetchStories(token: String) {
-        homeViewModel.getStories(token).observe(this) { result ->
+        homeViewModel.getStories(token).observe(requireActivity()) { result ->
             when (result) {
                 is ResultState.Loading -> {
                     showLoading()
@@ -148,23 +163,14 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun logoutDialog() {
-        AlertDialog.Builder(this).apply {
+        AlertDialog.Builder(requireActivity()).apply {
             setMessage(getString(R.string.logout_alert)).setPositiveButton(R.string.ok) { _, _ ->
-                LoginActivity.start(this@HomeActivity)
-                finish()
+                LoginActivity.start(requireActivity())
+                requireActivity().finish()
                 loginViewModel.setToken("")
             }.setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
             create()
             show()
-        }
-    }
-
-    companion object {
-        fun start(context: Context) {
-            Intent(context, HomeActivity::class.java).apply {
-                flags = FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                context.startActivity(this)
-            }
         }
     }
 }

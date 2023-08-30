@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.register
+package com.ziss.storyapp.presentation.ui.activities.register
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -20,9 +20,9 @@ import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.ziss.storyapp.R
+import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityRegisterBinding
 import com.ziss.storyapp.presentation.ViewModelFactory
-import com.ziss.storyapp.presentation.ui.home.dataStore
 import com.ziss.storyapp.presentation.viewmodels.RegisterViewModel
 import com.ziss.storyapp.utils.ResultState
 import java.util.Locale

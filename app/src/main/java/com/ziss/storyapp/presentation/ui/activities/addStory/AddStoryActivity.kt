@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.addStory
+package com.ziss.storyapp.presentation.ui.activities.addStory
 
 import android.Manifest
 import android.animation.AnimatorSet
@@ -23,11 +23,11 @@ import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.ziss.storyapp.MainActivity
 import com.ziss.storyapp.R
+import com.ziss.storyapp.dataStore
 import com.ziss.storyapp.databinding.ActivityAddStoryBinding
 import com.ziss.storyapp.presentation.ViewModelFactory
-import com.ziss.storyapp.presentation.ui.home.HomeActivity
-import com.ziss.storyapp.presentation.ui.home.dataStore
 import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
 import com.ziss.storyapp.utils.ResultState
 import com.ziss.storyapp.utils.createCustomTempFile
@@ -190,7 +190,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
                         showLoading(false)
 
                         if (!result.data.error) {
-                            HomeActivity.start(this)
+                            MainActivity.start(this)
                             finish()
                         } else {
                             Snackbar.make(binding.root, result.data.message, Snackbar.LENGTH_LONG)

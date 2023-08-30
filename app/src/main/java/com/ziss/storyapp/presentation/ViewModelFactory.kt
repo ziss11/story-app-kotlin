@@ -8,8 +8,9 @@ import com.ziss.storyapp.Injection.provideAuthRepository
 import com.ziss.storyapp.Injection.provideStoryRepository
 import com.ziss.storyapp.data.repositories.AuthRepository
 import com.ziss.storyapp.data.repositories.StoryRepository
-import com.ziss.storyapp.presentation.ui.addStory.AddStoryViewModel
-import com.ziss.storyapp.presentation.ui.home.HomeViewModel
+import com.ziss.storyapp.presentation.ui.activities.addStory.AddStoryViewModel
+import com.ziss.storyapp.presentation.ui.fragments.home.HomeViewModel
+import com.ziss.storyapp.presentation.ui.fragments.home.MapsViewModel
 import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
 import com.ziss.storyapp.presentation.viewmodels.RegisterViewModel
 
@@ -33,6 +34,10 @@ class ViewModelFactory private constructor(
 
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
                 AddStoryViewModel(storyRepository) as T
+            }
+
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(storyRepository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown view model class: $modelClass")
