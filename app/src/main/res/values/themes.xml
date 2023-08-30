@@ -1,10 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.StoryApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="android:statusBarColor">@color/light_white</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:fontFamily">@font/poppins</item>
+        <item name="android:colorPrimary">@color/orange</item>
     </style>
 
     <style name="Theme.StoryApp" parent="Base.Theme.StoryApp" />

@@ -22,10 +22,8 @@ class AuthRepository private constructor(
     suspend fun setToken(token: String) = localDataSource.saveToken(token)
 
     companion object {
-        @Volatile
         private var instance: AuthRepository? = null
 
-        @JvmStatic
         fun getInstance(dataStore: DataStore<Preferences>) =
             instance ?: synchronized(this) {
                 instance ?: AuthRepository(

@@ -19,18 +19,18 @@ import retrofit2.http.Query
 interface ApiService {
     @FormUrlEncoded
     @POST(Constants.REGISTER_PATH)
-    fun register(
+    suspend fun register(
         @Field("name") name: String,
         @Field("email") email: String,
         @Field("password") password: String
-    ): Call<BaseResponse>
+    ): BaseResponse
 
     @FormUrlEncoded
     @POST(Constants.LOGIN_PATH)
-    fun login(
+    suspend fun login(
         @Field("email") email: String,
         @Field("password") password: String
-    ): Call<LoginResponse>
+    ): LoginResponse
 
     @Multipart
     @POST(Constants.STORIES_PATH)

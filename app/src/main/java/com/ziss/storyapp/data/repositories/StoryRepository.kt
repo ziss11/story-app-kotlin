@@ -51,10 +51,8 @@ class StoryRepository private constructor(
     fun getStoriesWithLocation(token: String) = remoteDataSource.getStoriesWithLocation(token)
 
     companion object {
-        @Volatile
         private var instance: StoryRepository? = null
 
-        @JvmStatic
         fun getInstance(context: Context) = instance ?: synchronized(this) {
             instance ?: StoryRepository(
                 provideStoryRemoteDataSource(),

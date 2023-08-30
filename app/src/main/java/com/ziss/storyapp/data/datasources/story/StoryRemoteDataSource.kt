@@ -3,7 +3,6 @@ package com.ziss.storyapp.data.datasources.story
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.ziss.storyapp.Injection.provideApiService
 import com.ziss.storyapp.data.datasources.utils.service.ApiService
 import com.ziss.storyapp.data.models.BaseResponse
 import com.ziss.storyapp.data.models.StoriesResponse
@@ -127,12 +126,10 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
     companion object {
         private var TAG = StoryRemoteDataSource::class.java.simpleName
 
-        @Volatile
         private var instance: StoryRemoteDataSourceImpl? = null
 
-        @JvmStatic
-        fun getInstance() = instance ?: synchronized(this) {
-            instance ?: StoryRemoteDataSourceImpl(provideApiService())
+        fun getInstance(apiService: ApiService) = instance ?: synchronized(this) {
+            instance ?: StoryRemoteDataSourceImpl(apiService)
         }.also { instance = it }
     }
 }

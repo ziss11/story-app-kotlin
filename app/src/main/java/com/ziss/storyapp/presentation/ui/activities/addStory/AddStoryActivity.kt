@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -21,6 +22,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.ziss.storyapp.MainActivity
@@ -36,13 +40,36 @@ import java.io.File
 class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityAddStoryBinding
     private lateinit var factory: ViewModelFactory
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var currentPhotoPath: String
 
     private val loginViewModel: LoginViewModel by viewModels { factory }
     private val addStoryViewModel: AddStoryViewModel by viewModels { factory }
 
+    private var myLocation: LatLng? = null
     private var imageFile: File? = null
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permission ->
+            when {
+                permission.getOrDefault(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    false
+                ) -> {
+                    getMyLastLocation()
+                }
+
+                permission.getOrDefault(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    false
+                ) -> {
+                    getMyLastLocation()
+                }
+
+                else -> {}
+            }
+        }
 
     private val launcherIntentCamera =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -73,6 +100,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         factory = ViewModelFactory.getInstance(this)
 
         playAnimation()
@@ -83,6 +111,11 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.ivPreview.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> setUploadButtonEnable() }
         binding.edAddDescription.addTextChangedListener { setUploadButtonEnable() }
+        binding.cbLocation.setOnClickListener {
+            if (binding.cbLocation.isChecked) {
+                getMyLastLocation()
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -127,6 +160,39 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getMyLastLocation() {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            && checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    myLocation = LatLng(location.latitude, location.longitude)
+                    Log.d("MyLocation", myLocation.toString())
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Location is not found. Try Again",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
     private fun playAnimation() {
         val viewObjects = listOf(
             binding.frame,
@@ -134,6 +200,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
             binding.btnCamera,
             binding.btnGallery,
             binding.edAddDescription,
+            binding.cbLocation,
             binding.buttonAdd
         )
 
@@ -182,7 +249,13 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         val description = binding.edAddDescription.text.toString()
 
         loginViewModel.getToken().observe(this) { token ->
-            addStoryViewModel.addStory(token, imageFile!!, description).observe(this) { result ->
+            addStoryViewModel.addStory(
+                token,
+                imageFile!!,
+                description,
+                myLocation?.latitude,
+                myLocation?.longitude
+            ).observe(this) { result ->
                 when (result) {
                     is ResultState.Loading -> showLoading()
                     is ResultState.Success -> {

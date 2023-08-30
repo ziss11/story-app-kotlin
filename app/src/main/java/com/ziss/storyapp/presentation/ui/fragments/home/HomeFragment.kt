@@ -99,6 +99,10 @@ class HomeFragment : Fragment(), MenuProvider {
             rvStory.layoutManager = layout
         }
 
+        storyAdapter.addLoadStateListener {
+            layout.scrollToPosition(0)
+        }
+
         fetchToken()
     }
 

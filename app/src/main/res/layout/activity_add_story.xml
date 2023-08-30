@@ -92,18 +92,34 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_camera"
         tools:alpha="100" />
 
+    <CheckBox
+        android:id="@+id/cb_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:alpha="0"
+        android:buttonTint="@color/orange"
+        android:foregroundTint="@color/white"
+        android:text="@string/upload_with_location"
+        app:layout_constraintBottom_toTopOf="@id/button_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ed_add_description"
+        tools:alpha="100" />
+
     <com.ziss.storyapp.presentation.components.MyButton
         android:id="@+id/button_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="24dp"
+        android:layout_marginVertical="16dp"
         android:alpha="0"
         android:text="@string/upload"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_add_description"
+        app:layout_constraintTop_toBottomOf="@+id/cb_location"
         tools:alpha="100" />
 
     <ProgressBar

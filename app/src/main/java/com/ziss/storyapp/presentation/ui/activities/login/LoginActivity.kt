@@ -77,9 +77,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         is ResultState.Success -> {
                             showLoading(false)
                             loginViewModel.setToken(result.data.loginResult.token)
-                            MainActivity.start(this)
-                            finish()
-
                         }
 
                         is ResultState.Failed -> {

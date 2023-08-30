@@ -42,5 +42,6 @@
     <string name="zoom_out">Perkecil</string>
     <string name="map_title">Peta Story</string>
     <string name="reload">Muat ulang</string>
+    <string name="upload_with_location">Unggah dengan lokasi</string>
 
 </resources>

@@ -99,7 +99,10 @@ class MapsFragment : Fragment() {
 
                     stories.forEach { story ->
                         val latLng = LatLng(story.lat, story.lon)
-                        map.addMarker(MarkerOptions().position(latLng).title(story.name))
+                        map.addMarker(
+                            MarkerOptions().position(latLng).title(story.name)
+                                .snippet(story.description)
+                        )
                         boundBuilder.include(latLng)
                     }
 

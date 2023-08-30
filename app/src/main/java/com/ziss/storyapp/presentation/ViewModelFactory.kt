@@ -19,36 +19,24 @@ class ViewModelFactory private constructor(
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return when {
-            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
-                LoginViewModel(authRepository) as T
-            }
-
-            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
-                RegisterViewModel(authRepository) as T
-            }
-
-            modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                HomeViewModel(storyRepository) as T
-            }
-
-            modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
-                AddStoryViewModel(storyRepository) as T
-            }
-
-            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
-                MapsViewModel(storyRepository) as T
-            }
-
-            else -> throw IllegalArgumentException("Unknown view model class: $modelClass")
+        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+            return LoginViewModel(authRepository) as T
+        } else if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
+            return RegisterViewModel(authRepository) as T
+        } else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            return HomeViewModel(storyRepository) as T
+        } else if (modelClass.isAssignableFrom(AddStoryViewModel::class.java)) {
+            return AddStoryViewModel(storyRepository) as T
+        } else if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
+            return MapsViewModel(storyRepository) as T
         }
+
+        throw IllegalArgumentException("Unknown view model class: $modelClass")
     }
 
     companion object {
-        @Volatile
         private var instance: ViewModelFactory? = null
 
-        @JvmStatic
         fun getInstance(context: Context) =
             instance ?: synchronized(this) {
                 instance ?: ViewModelFactory(
