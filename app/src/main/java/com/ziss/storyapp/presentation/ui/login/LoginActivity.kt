@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.activities
+package com.ziss.storyapp.presentation.ui.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -19,11 +19,13 @@ import androidx.core.content.getSystemService
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.ziss.storyapp.MainActivity
 import com.ziss.storyapp.R
 import com.ziss.storyapp.databinding.ActivityLoginBinding
-import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
-import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
+import com.ziss.storyapp.presentation.ViewModelFactory
+import com.ziss.storyapp.presentation.ui.home.HomeActivity
+import com.ziss.storyapp.presentation.ui.home.dataStore
+import com.ziss.storyapp.presentation.ui.register.RegisterActivity
+import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
 import com.ziss.storyapp.utils.ResultState
 import java.util.Locale
 
@@ -31,7 +33,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var factory: ViewModelFactory
 
-    private val authViewModel: AuthViewModel by viewModels { factory }
+    private val loginViewModel: LoginViewModel by viewModels { factory }
 
     private val launcherRegister =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -48,7 +50,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityLoginBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        factory = ViewModelFactory.getInstance(this)
+        factory = ViewModelFactory.getInstance(dataStore)
 
         setSpanText()
         playAnimation()
@@ -72,14 +74,14 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 val email = binding.edLoginEmail.text.toString()
                 val password = binding.edLoginPassword.text.toString()
 
-                authViewModel.login(email, password).observe(this) { result ->
+                loginViewModel.login(email, password).observe(this) { result ->
                     when (result) {
                         is ResultState.Loading -> showLoading()
 
                         is ResultState.Success -> {
                             showLoading(false)
-                            authViewModel.setToken(result.data.loginResult.token)
-                            MainActivity.start(this)
+                            loginViewModel.setToken(result.data.loginResult.token)
+                            HomeActivity.start(this)
                             finish()
 
                         }
@@ -98,9 +100,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun checkAuth() {
-        authViewModel.getToken().observe(this) { token ->
+        loginViewModel.getToken().observe(this) { token ->
             if (!token.isNullOrEmpty()) {
-                MainActivity.start(this)
+                HomeActivity.start(this)
                 finish()
             }
         }

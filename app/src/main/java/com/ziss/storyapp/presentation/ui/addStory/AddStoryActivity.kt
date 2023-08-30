@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.activities
+package com.ziss.storyapp.presentation.ui.addStory
 
 import android.Manifest
 import android.animation.AnimatorSet
@@ -23,11 +23,12 @@ import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.ziss.storyapp.MainActivity
 import com.ziss.storyapp.R
 import com.ziss.storyapp.databinding.ActivityAddStoryBinding
-import com.ziss.storyapp.presentation.viewmodels.StoryViewModel
-import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
+import com.ziss.storyapp.presentation.ViewModelFactory
+import com.ziss.storyapp.presentation.ui.home.HomeActivity
+import com.ziss.storyapp.presentation.ui.home.dataStore
+import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
 import com.ziss.storyapp.utils.ResultState
 import com.ziss.storyapp.utils.createCustomTempFile
 import com.ziss.storyapp.utils.toFile
@@ -39,7 +40,8 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var currentPhotoPath: String
 
-    private val storyViewModel: StoryViewModel by viewModels { factory }
+    private val loginViewModel: LoginViewModel by viewModels { factory }
+    private val addStoryViewModel: AddStoryViewModel by viewModels { factory }
 
     private var imageFile: File? = null
 
@@ -72,7 +74,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        factory = ViewModelFactory.getInstance(this)
+        factory = ViewModelFactory.getInstance(dataStore)
 
         playAnimation()
 
@@ -178,33 +180,34 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
             binding.edAddDescription.error = getString(R.string.empty_desc_alert)
             return
         }
-
         val description = binding.edAddDescription.text.toString()
 
-        storyViewModel.addStory(imageFile!!, description).observe(this) { result ->
-            when (result) {
-                is ResultState.Loading -> showLoading()
-                is ResultState.Success -> {
-                    showLoading(false)
+        loginViewModel.getToken().observe(this) { token ->
+            addStoryViewModel.addStory(token, imageFile!!, description).observe(this) { result ->
+                when (result) {
+                    is ResultState.Loading -> showLoading()
+                    is ResultState.Success -> {
+                        showLoading(false)
 
-                    if (!result.data.error) {
-                        MainActivity.start(this)
-                        finish()
-                    } else {
-                        Snackbar.make(binding.root, result.data.message, Snackbar.LENGTH_LONG)
+                        if (!result.data.error) {
+                            HomeActivity.start(this)
+                            finish()
+                        } else {
+                            Snackbar.make(binding.root, result.data.message, Snackbar.LENGTH_LONG)
+                                .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
+                                .setBackgroundTint(this.getColor(R.color.orange)).show()
+                        }
+                    }
+
+                    is ResultState.Failed -> {
+                        showLoading(false)
+                        Snackbar.make(
+                            binding.root,
+                            getString(R.string.add_story_error_alert), Snackbar.LENGTH_LONG
+                        )
                             .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
                             .setBackgroundTint(this.getColor(R.color.orange)).show()
                     }
-                }
-
-                is ResultState.Failed -> {
-                    showLoading(false)
-                    Snackbar.make(
-                        binding.root,
-                        getString(R.string.add_story_error_alert), Snackbar.LENGTH_LONG
-                    )
-                        .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
-                        .setBackgroundTint(this.getColor(R.color.orange)).show()
                 }
             }
         }

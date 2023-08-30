@@ -11,8 +11,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:src="@drawable/ic_avatar"
-        tools:ignore="ContentDescription" />
+        android:contentDescription="@string/avatar_image"
+        android:src="@drawable/ic_avatar" />
 
     <TextView
         android:id="@+id/tv_item_name"
@@ -35,8 +35,8 @@
         android:layout_height="300dp"
         android:layout_below="@id/avatar"
         android:layout_marginTop="16dp"
+        android:contentDescription="@string/story_image"
         android:scaleType="centerCrop"
-        tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/avatars" />
 
 </RelativeLayout>

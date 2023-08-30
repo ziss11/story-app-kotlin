@@ -1,4 +1,4 @@
-package com.ziss.storyapp
+package com.ziss.storyapp.presentation.ui.home
 
 import android.app.AlertDialog
 import android.content.Context
@@ -17,26 +17,26 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ziss.storyapp.R
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.databinding.ActivityMainBinding
+import com.ziss.storyapp.presentation.ViewModelFactory
 import com.ziss.storyapp.presentation.adapters.StoryAdapter
-import com.ziss.storyapp.presentation.ui.addstory.AddStoryActivity
+import com.ziss.storyapp.presentation.ui.addStory.AddStoryActivity
 import com.ziss.storyapp.presentation.ui.login.LoginActivity
-import com.ziss.storyapp.presentation.ui.storydetail.StoryDetailActivity
-import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
-import com.ziss.storyapp.presentation.viewmodels.StoryViewModel
-import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
+import com.ziss.storyapp.presentation.ui.storyDetail.StoryDetailActivity
+import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
 import com.ziss.storyapp.utils.ResultState
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth")
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var factory: ViewModelFactory
     private lateinit var storyAdapter: StoryAdapter
 
-    private val authViewModel: AuthViewModel by viewModels { factory }
-    private val storyViewModel: StoryViewModel by viewModels { factory }
+    private val loginViewModel: LoginViewModel by viewModels { factory }
+    private val homeViewModel: HomeViewModel by viewModels { factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +46,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appbarLayout.toolbar)
         supportActionBar?.title = getString(R.string.story_title)
 
-        factory = ViewModelFactory.getInstance(this)
+        factory = ViewModelFactory.getInstance(dataStore)
 
         setListAdapter()
 
         binding.fabAddStory.setOnClickListener {
-            AddStoryActivity.start(this@MainActivity)
+            AddStoryActivity.start(this@HomeActivity)
         }
     }
 
@@ -83,11 +83,9 @@ class MainActivity : AppCompatActivity() {
         storyAdapter.setOnClickItemCallback(object : StoryAdapter.OnItemClickCallback {
             override fun onItemClicked(story: StoryModel, storyImage: ImageView) {
                 val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this@MainActivity,
-                    storyImage,
-                    "item_photo"
+                    this@HomeActivity, storyImage, "item_photo"
                 )
-                StoryDetailActivity.start(this@MainActivity, story, optionsCompat)
+                StoryDetailActivity.start(this@HomeActivity, story, optionsCompat)
             }
         })
 
@@ -100,11 +98,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
-        authViewModel.getToken().observe(this) { token -> fetchStories(token) }
+        loginViewModel.getToken().observe(this) { token -> fetchStories(token) }
     }
 
     private fun fetchStories(token: String) {
-        storyViewModel.getStories(token).observe(this) { result ->
+        homeViewModel.getStories(token).observe(this) { result ->
             when (result) {
                 is ResultState.Loading -> {
                     showLoading()
@@ -132,11 +130,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showLoading(isLoading: Boolean = true) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun showMessage(isShowMessage: Boolean = true) {
@@ -155,13 +149,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun logoutDialog() {
         AlertDialog.Builder(this).apply {
-            setMessage(getString(R.string.logout_alert))
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    LoginActivity.start(this@MainActivity)
-                    finish()
-                    authViewModel.setToken("")
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+            setMessage(getString(R.string.logout_alert)).setPositiveButton(R.string.ok) { _, _ ->
+                LoginActivity.start(this@HomeActivity)
+                finish()
+                loginViewModel.setToken("")
+            }.setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
             create()
             show()
         }
@@ -169,7 +161,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         fun start(context: Context) {
-            Intent(context, MainActivity::class.java).apply {
+            Intent(context, HomeActivity::class.java).apply {
                 flags = FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(this)
             }

@@ -1,17 +1,9 @@
-package com.ziss.storyapp.presentation.viewmodels
+package com.ziss.storyapp.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import com.ziss.storyapp.data.repositories.StoryRepository
-import java.io.File
 
-class StoryViewModel(private val repository: StoryRepository) : ViewModel() {
-    fun addStory(
-        file: File,
-        description: String,
-        lat: Double? = null,
-        lon: Double? = null
-    ) =
-        repository.addStory(file, description, lat, lon)
-
+class HomeViewModel(private val repository: StoryRepository) : ViewModel() {
     fun getStories(token: String) = repository.getStories(token)
+    fun getStoriesWithLocation(token: String) = repository.getStoriesWithLocation(token)
 }

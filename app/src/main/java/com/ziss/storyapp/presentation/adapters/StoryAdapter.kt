@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.adapters
+package com.ziss.storyapp.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -35,6 +35,7 @@ interface ApiService {
     @Multipart
     @POST(Constants.STORIES_PATH)
     fun addStory(
+        @Header("Authorization") token: String,
         @Part photo: MultipartBody.Part,
         @Part("description") descriptions: RequestBody,
         @Part("lat") lat: RequestBody? = null,
@@ -48,6 +49,7 @@ interface ApiService {
 
     @GET(Constants.STORIES_PATH)
     fun getStoriesWithLocation(
+        @Header("Authorization") token: String,
         @Query("location") location: Int = 1
     ): Call<StoriesResponse>
 }

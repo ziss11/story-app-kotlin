@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/light_white"
     android:orientation="vertical"
-    tools:context=".presentation.ui.activities.StoryDetailActivity">
+    tools:context=".presentation.ui.storyDetail.StoryDetailActivity">
 
     <include
         android:id="@+id/appbar_layout"
@@ -25,9 +25,9 @@
                 android:id="@+id/iv_item_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/story_image"
                 android:scaleType="fitCenter"
                 android:transitionName="item_photo"
-                tools:ignore="ContentDescription"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView

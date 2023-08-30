@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.activities
+package com.ziss.storyapp.presentation.ui.register
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -21,8 +21,9 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.ziss.storyapp.R
 import com.ziss.storyapp.databinding.ActivityRegisterBinding
-import com.ziss.storyapp.presentation.viewmodels.AuthViewModel
-import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
+import com.ziss.storyapp.presentation.ViewModelFactory
+import com.ziss.storyapp.presentation.ui.home.dataStore
+import com.ziss.storyapp.presentation.viewmodels.RegisterViewModel
 import com.ziss.storyapp.utils.ResultState
 import java.util.Locale
 
@@ -30,13 +31,13 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var factory: ViewModelFactory
 
-    private val authViewModel: AuthViewModel by viewModels { factory }
+    private val registerViewModel: RegisterViewModel by viewModels { factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        factory = ViewModelFactory.getInstance(this)
+        factory = ViewModelFactory.getInstance(dataStore)
 
         setSpanText()
         playAnimation()
@@ -56,7 +57,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                 val email = binding.edRegisterEmail.text.toString()
                 val password = binding.edRegisterPassword.text.toString()
 
-                authViewModel.register(name, email, password).observe(this) { result ->
+                registerViewModel.register(name, email, password).observe(this) { result ->
                     when (result) {
                         is ResultState.Loading -> showLoading()
 

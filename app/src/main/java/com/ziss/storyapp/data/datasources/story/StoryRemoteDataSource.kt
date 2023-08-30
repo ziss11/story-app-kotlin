@@ -1,6 +1,5 @@
 package com.ziss.storyapp.data.datasources.story
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -20,6 +19,7 @@ import java.io.File
 
 interface StoryRemoteDataSource {
     fun addStory(
+        token: String,
         file: File,
         description: String,
         lat: Double?,
@@ -27,19 +27,23 @@ interface StoryRemoteDataSource {
     ): LiveData<ResultState<BaseResponse>>
 
     fun getStories(token: String): LiveData<ResultState<StoriesResponse>>
+    fun getStoriesWithLocation(token: String): LiveData<ResultState<StoriesResponse>>
 }
 
 class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiService) :
     StoryRemoteDataSource {
     private val addStoryResult = MediatorLiveData<ResultState<BaseResponse>>()
     private val storiesResult = MediatorLiveData<ResultState<StoriesResponse>>()
+    private val storiesWithLocationResult = MediatorLiveData<ResultState<StoriesResponse>>()
 
     override fun addStory(
+        token: String,
         file: File,
         description: String,
         lat: Double?,
         lon: Double?
     ): LiveData<ResultState<BaseResponse>> {
+        val bearerToken = "Bearer $token"
         val requestImageFile = file.asRequestBody("image/jpg".toMediaType())
         val imageMultipart = MultipartBody.Part.createFormData(
             "photo", file.name, requestImageFile
@@ -53,13 +57,14 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
 
         val client = if (lat != null && lon != null) {
             apiService.addStory(
+                bearerToken,
                 imageMultipart,
                 descriptionBody,
                 latitudeBody,
                 longitudeBody
             )
         } else {
-            apiService.addStory(imageMultipart, descriptionBody)
+            apiService.addStory(bearerToken, imageMultipart, descriptionBody)
         }
 
         client.enqueue(object : Callback<BaseResponse> {
@@ -112,12 +117,41 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
         return storiesResult
     }
 
+    override fun getStoriesWithLocation(token: String): LiveData<ResultState<StoriesResponse>> {
+        storiesWithLocationResult.value = ResultState.Loading
+
+        val bearerToken = "Bearer $token"
+        val client = apiService.getStoriesWithLocation(bearerToken)
+        client.enqueue(object : Callback<StoriesResponse> {
+            override fun onResponse(
+                call: Call<StoriesResponse>,
+                response: Response<StoriesResponse>
+            ) {
+                val responseBody = response.body()
+
+                if (response.isSuccessful && responseBody != null) {
+                    storiesWithLocationResult.value = ResultState.Success(responseBody)
+                } else {
+                    storiesWithLocationResult.value = ResultState.Failed(response.message())
+                    Log.d(TAG, response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<StoriesResponse>, t: Throwable) {
+                storiesWithLocationResult.value = ResultState.Failed(t.message.toString())
+                Log.d(TAG, t.message.toString())
+            }
+        })
+
+        return storiesWithLocationResult
+    }
+
     companion object {
         private var TAG = StoryRemoteDataSource::class.java.simpleName
         private var instance: StoryRemoteDataSourceImpl? = null
 
-        fun getInstance(context: Context) = instance ?: synchronized(this) {
-            instance ?: StoryRemoteDataSourceImpl(provideApiService(context))
+        fun getInstance() = instance ?: synchronized(this) {
+            instance ?: StoryRemoteDataSourceImpl(provideApiService())
         }.also { instance = it }
     }
 }

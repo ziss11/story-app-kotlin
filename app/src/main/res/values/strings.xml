@@ -34,4 +34,7 @@
     <string name="language">Language</string>
     <string name="empty_desc_alert">Description can\'t be empty</string>
     <string name="add_story_error_alert">Unable to add story</string>
+    <string name="avatar_image">Avatar Image</string>
+    <string name="story_image">Story Image</string>
+    <string name="create_new_story">Create new story</string>
 </resources>

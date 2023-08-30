@@ -1,11 +1,11 @@
 package com.ziss.storyapp.data.repositories
 
-import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.ziss.storyapp.Injection.provideAuthLocalDataSource
 import com.ziss.storyapp.Injection.provideAuthRemoteDataSource
 import com.ziss.storyapp.data.datasources.auth.AuthLocalDataSource
 import com.ziss.storyapp.data.datasources.auth.AuthRemoteDataSource
-import com.ziss.storyapp.dataStore
 
 class AuthRepository private constructor(
     private val remoteDataSource: AuthRemoteDataSource,
@@ -24,11 +24,11 @@ class AuthRepository private constructor(
     companion object {
         private var instance: AuthRepository? = null
 
-        fun getInstance(context: Context) =
+        fun getInstance(dataStore: DataStore<Preferences>) =
             instance ?: synchronized(this) {
                 instance ?: AuthRepository(
-                    provideAuthRemoteDataSource(context),
-                    provideAuthLocalDataSource(context.dataStore)
+                    provideAuthRemoteDataSource(),
+                    provideAuthLocalDataSource(dataStore)
                 )
             }.also { instance = it }
     }

@@ -35,4 +35,7 @@
     <string name="language">Bahasa</string>
     <string name="empty_desc_alert">Deskripsi tidak boleh kosong</string>
     <string name="add_story_error_alert">Tidak dapat menambahkan story</string>
+    <string name="avatar_image">Gambar Avatar</string>
+    <string name="story_image">Gambar Story</string>
+    <string name="create_new_story">Buat story baru</string>
 </resources>

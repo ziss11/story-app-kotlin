@@ -1,4 +1,4 @@
-package com.ziss.storyapp.presentation.ui.activities
+package com.ziss.storyapp.presentation.ui.storyDetail
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -13,12 +13,10 @@ import androidx.core.app.ActivityOptionsCompat
 import com.ziss.storyapp.R
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.databinding.ActivityStoryDetailBinding
-import com.ziss.storyapp.presentation.viewmodels.ViewModelFactory
 import com.ziss.storyapp.utils.loadImage
 
 class StoryDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryDetailBinding
-    private lateinit var factory: ViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +27,6 @@ class StoryDetailActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.story_detail_title)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        factory = ViewModelFactory.getInstance(this)
 
         playAnimation()
         fetchStory()
