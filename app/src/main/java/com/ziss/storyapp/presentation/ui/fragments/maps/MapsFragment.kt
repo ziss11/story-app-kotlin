@@ -59,6 +59,13 @@ class MapsFragment : Fragment() {
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+
+        binding.fabZoomIn.setOnClickListener {
+            map.animateCamera(CameraUpdateFactory.zoomIn())
+        }
+        binding.fabZoomOut.setOnClickListener {
+            map.animateCamera(CameraUpdateFactory.zoomOut())
+        }
     }
 
 
