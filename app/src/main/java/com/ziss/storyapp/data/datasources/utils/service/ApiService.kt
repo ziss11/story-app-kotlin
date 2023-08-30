@@ -10,6 +10,7 @@ import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -42,7 +43,11 @@ interface ApiService {
 
     @GET(Constants.STORIES_PATH)
     fun getStories(
-        @Query("page") page: Int? = 1,
-        @Query("size") size: Int? = 10,
+        @Header("Authorization") token: String,
+    ): Call<StoriesResponse>
+
+    @GET(Constants.STORIES_PATH)
+    fun getStoriesWithLocation(
+        @Query("location") location: Int = 1
     ): Call<StoriesResponse>
 }

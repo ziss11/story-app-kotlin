@@ -10,8 +10,7 @@ class StoryRepository private constructor(private val remoteDataSource: StoryRem
         file: File, description: String, lat: Double?, lon: Double?
     ) = remoteDataSource.addStory(file, description, lat, lon)
 
-    fun getStories(page: Int?, size: Int?) =
-        remoteDataSource.getStories(page, size)
+    fun getStories(token: String) = remoteDataSource.getStories(token)
 
     companion object {
         private var instance: StoryRepository? = null

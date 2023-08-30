@@ -46,6 +46,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
         factory = ViewModelFactory.getInstance(this)
 
@@ -54,6 +55,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         editTextListener()
 
         binding.btnLogin.setOnClickListener(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        checkAuth()
     }
 
     override fun onClick(v: View?) {
@@ -75,6 +81,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                             authViewModel.setToken(result.data.loginResult.token)
                             MainActivity.start(this)
                             finish()
+
                         }
 
                         is ResultState.Failed -> {
@@ -86,6 +93,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun checkAuth() {
+        authViewModel.getToken().observe(this) { token ->
+            if (!token.isNullOrEmpty()) {
+                MainActivity.start(this)
+                finish()
             }
         }
     }

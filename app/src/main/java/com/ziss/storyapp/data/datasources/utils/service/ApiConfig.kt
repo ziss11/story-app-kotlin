@@ -1,5 +1,6 @@
 package com.ziss.storyapp.data.datasources.utils.service
 
+import com.ziss.storyapp.BuildConfig
 import com.ziss.storyapp.utils.Constants
 import com.ziss.storyapp.utils.TokenInterceptor
 import okhttp3.OkHttpClient
@@ -9,8 +10,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig {
     fun getApiService(token: String? = ""): ApiService {
-        val loggingInterceptor =
+        val loggingInterceptor = if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        } else {
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
+        }
 
         val tokenInterceptor = if (!token.isNullOrEmpty()) {
             TokenInterceptor(token.toString())

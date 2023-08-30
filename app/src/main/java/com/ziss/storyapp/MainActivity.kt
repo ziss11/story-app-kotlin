@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.story_title)
 
         factory = ViewModelFactory.getInstance(this)
-        checkAuth()
 
         setListAdapter()
 
@@ -77,15 +76,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkAuth() {
-        authViewModel.getToken().observe(this) { token ->
-            if (token.isNullOrEmpty()) {
-                LoginActivity.start(this)
-                finish()
-            }
-        }
-    }
-
     private fun setListAdapter() {
         val layout = LinearLayoutManager(this)
 
@@ -105,11 +95,16 @@ class MainActivity : AppCompatActivity() {
             rvStory.adapter = storyAdapter
             rvStory.layoutManager = layout
         }
-        fetchStories()
+
+        fetchToken()
     }
 
-    private fun fetchStories() {
-        storyViewModel.getStories().observe(this) { result ->
+    private fun fetchToken() {
+        authViewModel.getToken().observe(this) { token -> fetchStories(token) }
+    }
+
+    private fun fetchStories(token: String) {
+        storyViewModel.getStories(token).observe(this) { result ->
             when (result) {
                 is ResultState.Loading -> {
                     showLoading()
@@ -162,6 +157,8 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this).apply {
             setMessage(getString(R.string.logout_alert))
                 .setPositiveButton(R.string.ok) { _, _ ->
+                    LoginActivity.start(this@MainActivity)
+                    finish()
                     authViewModel.setToken("")
                 }
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }

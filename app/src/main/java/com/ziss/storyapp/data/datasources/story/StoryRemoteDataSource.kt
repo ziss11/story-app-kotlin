@@ -26,10 +26,7 @@ interface StoryRemoteDataSource {
         lon: Double?
     ): LiveData<ResultState<BaseResponse>>
 
-    fun getStories(
-        page: Int?,
-        size: Int?
-    ): LiveData<ResultState<StoriesResponse>>
+    fun getStories(token: String): LiveData<ResultState<StoriesResponse>>
 }
 
 class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiService) :
@@ -86,10 +83,11 @@ class StoryRemoteDataSourceImpl private constructor(private val apiService: ApiS
         return addStoryResult
     }
 
-    override fun getStories(page: Int?, size: Int?): LiveData<ResultState<StoriesResponse>> {
+    override fun getStories(token: String): LiveData<ResultState<StoriesResponse>> {
         storiesResult.value = ResultState.Loading
 
-        val client = apiService.getStories(page, size)
+        val bearerToken = "Bearer $token"
+        val client = apiService.getStories(bearerToken)
         client.enqueue(object : Callback<StoriesResponse> {
             override fun onResponse(
                 call: Call<StoriesResponse>,

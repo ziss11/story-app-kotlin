@@ -13,6 +13,5 @@ class StoryViewModel(private val repository: StoryRepository) : ViewModel() {
     ) =
         repository.addStory(file, description, lat, lon)
 
-    fun getStories(page: Int? = 1, size: Int? = 10) =
-        repository.getStories(page, size)
+    fun getStories(token: String) = repository.getStories(token)
 }
