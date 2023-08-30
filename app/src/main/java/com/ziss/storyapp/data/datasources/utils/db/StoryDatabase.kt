@@ -5,17 +5,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.ziss.storyapp.data.models.RemoteKeys
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.utils.Converter
 
 @Database(
-    entities = [StoryModel::class],
-    version = 2,
+    entities = [StoryModel::class, RemoteKeys::class],
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converter::class)
 abstract class StoryDatabase : RoomDatabase() {
     abstract fun storyDao(): StoryDao
+    abstract fun remoteKeysDao(): RemoteKeysDao
 
     companion object {
         @Volatile

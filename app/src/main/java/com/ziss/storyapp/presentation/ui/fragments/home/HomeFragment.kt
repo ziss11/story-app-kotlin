@@ -20,10 +20,13 @@ import com.ziss.storyapp.R
 import com.ziss.storyapp.data.models.StoryModel
 import com.ziss.storyapp.databinding.FragmentHomeBinding
 import com.ziss.storyapp.presentation.ViewModelFactory
+import com.ziss.storyapp.presentation.adapters.LoadingStateAdapter
 import com.ziss.storyapp.presentation.adapters.StoryAdapter
 import com.ziss.storyapp.presentation.ui.activities.addStory.AddStoryActivity
 import com.ziss.storyapp.presentation.ui.activities.login.LoginActivity
+import com.ziss.storyapp.presentation.ui.activities.storyDetail.StoryDetailActivity
 import com.ziss.storyapp.presentation.viewmodels.LoginViewModel
+import com.ziss.storyapp.utils.ResultState
 
 class HomeFragment : Fragment(), MenuProvider {
     private var _binding: FragmentHomeBinding? = null
@@ -36,8 +39,7 @@ class HomeFragment : Fragment(), MenuProvider {
     private val homeViewModel: HomeViewModel by viewModels { factory }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         return _binding?.root
@@ -46,14 +48,11 @@ class HomeFragment : Fragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().addMenuProvider(
-            this,
-            viewLifecycleOwner,
-            androidx.lifecycle.Lifecycle.State.RESUMED
+            this, viewLifecycleOwner, androidx.lifecycle.Lifecycle.State.RESUMED
         )
 
         factory = ViewModelFactory.getInstance(requireActivity())
 
-//        setToolbar()
         setListAdapter()
 
         binding.fabAddStory.setOnClickListener {
@@ -81,12 +80,6 @@ class HomeFragment : Fragment(), MenuProvider {
         }
     }
 
-//    private fun setToolbar() {
-//        val activity = activity as AppCompatActivity
-//        activity.setSupportActionBar(binding.appbarLayout.toolbar)
-//        activity.supportActionBar?.title = getString(R.string.story_title)
-//    }
-
     private fun setListAdapter() {
         val layout = LinearLayoutManager(requireActivity())
 
@@ -96,12 +89,13 @@ class HomeFragment : Fragment(), MenuProvider {
                 val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     requireActivity(), storyImage, "item_photo"
                 )
-//                StoryDetailActivity.start(requireActivity(), story, optionsCompat)
+                StoryDetailActivity.start(requireActivity(), story, optionsCompat)
             }
         })
 
         binding.apply {
-            rvStory.adapter = storyAdapter
+            rvStory.adapter =
+                storyAdapter.withLoadStateFooter(LoadingStateAdapter { storyAdapter.retry() })
             rvStory.layoutManager = layout
         }
 
@@ -114,7 +108,23 @@ class HomeFragment : Fragment(), MenuProvider {
 
     private fun fetchStories(token: String) {
         homeViewModel.getStories(token).observe(requireActivity()) { result ->
-            storyAdapter.submitData(lifecycle, result)
+            when (result) {
+                is ResultState.Loading -> {
+                    showLoading()
+                    showMessage(false)
+                }
+
+                is ResultState.Success -> {
+                    showLoading(false)
+                    showMessage(false)
+                    storyAdapter.submitData(lifecycle, result.data)
+                }
+
+                is ResultState.Failed -> {
+                    showLoading(false)
+                    showMessage()
+                }
+            }
         }
     }
 

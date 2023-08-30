@@ -41,5 +41,6 @@
     <string name="zoom_in">Perbesar</string>
     <string name="zoom_out">Perkecil</string>
     <string name="map_title">Peta Story</string>
+    <string name="reload">Muat ulang</string>
 
 </resources>
